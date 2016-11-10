@@ -19,7 +19,7 @@ import java.nio.channels.SeekableByteChannel;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    Spinner lightSettings;
+    Spinner lightSettings, frequencySet;
 
     SeekBar proximitySettings;
 
@@ -76,6 +76,12 @@ public class SettingsActivity extends AppCompatActivity {
                 editor = prefs.edit();
                 editor.putInt(Constants.LIGHT,Integer.parseInt(tmp));
                 editor.putFloat(Constants.PROX, progressNow);
+                tmp= frequencySet.getSelectedItem().toString();
+                if(tmp.equals("SLOW")){
+                    editor.putInt(Constants.FREQ,SensorManager.SENSOR_DELAY_NORMAL);
+                } else {
+                    editor.putInt(Constants.FREQ,SensorManager.SENSOR_DELAY_GAME);
+                }
                 editor.apply();
                 finish();
             }
@@ -88,6 +94,7 @@ public class SettingsActivity extends AppCompatActivity {
         /*
          * Initialise all UI Views
          */
+        frequencySet= (Spinner)  findViewById(R.id.freq_set);
         lightSettings= (Spinner) findViewById(R.id.light_set);
         proximitySettings= (SeekBar) findViewById(R.id.proximity_set);
         save = (Button)findViewById(R.id.save_button);
@@ -118,6 +125,10 @@ public class SettingsActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter= new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,adapterArray);
         lightSettings.setAdapter(adapter);
 
+        String[] connectArray = {"SLOW","FAST"};
+        ArrayAdapter<String> connect= new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,connectArray);
+        frequencySet.setAdapter(connect);
+
         /*
          * Set spinner's default position at user's last choice
          */
@@ -139,6 +150,4 @@ public class SettingsActivity extends AppCompatActivity {
 
         proximitySettings.setProgress(prefs.getInt(Constants.LIGHT, 0));
     }
-
-
 }

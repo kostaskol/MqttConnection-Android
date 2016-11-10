@@ -37,10 +37,11 @@ public class MainScreen extends AppCompatActivity
     float number, floorAvg;
     float av; /*light average*/
     boolean over, under;
-    Runnable rUp, rDown;
-    private ScheduledFuture cancelableUp, cancelableDown;
+    Runnable rUp, rDown, proxAlert;
+    private ScheduledFuture  cancelProx;
     private final ScheduledExecutorService schedulerUp = Executors.newScheduledThreadPool(1);
     private final ScheduledExecutorService schedulerDown = Executors.newScheduledThreadPool(1);
+    private final ScheduledExecutorService schedulerProx = Executors.newScheduledThreadPool(1);
     SharedPreferences prefs;
     MediaPlayer myLightPlayer;
     MediaPlayer myProxPlayer;
@@ -104,7 +105,7 @@ public class MainScreen extends AppCompatActivity
          * Both cancelables are necessary for changing the average room's lighting
          * in case of a change of environment
          */
-        cancelableUp = cancelableDown = null;
+
 
         /*
          * Get the necessary sensor manager
@@ -130,7 +131,6 @@ public class MainScreen extends AppCompatActivity
                     av = 0;
                     number = 0;
                     over = false;
-                    cancelableUp = null;
                 }
             }
         };
@@ -143,7 +143,16 @@ public class MainScreen extends AppCompatActivity
                     av = 0;
                     number = 0;
                     under = false;
-                    cancelableDown = null;
+                }
+            }
+        };
+        proxAlert= new Runnable() {
+            @Override
+            public void run() {
+                proxToast.show();
+                proxToastIsShowing = true;
+                if (!myLightPlayer.isPlaying()&& !myProxPlayer.isPlaying()) {
+                    myProxPlayer.start();
                 }
             }
         };
@@ -156,8 +165,10 @@ public class MainScreen extends AppCompatActivity
          /*
          * Register a light and proximity listener
          */
-        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), SensorManager.SENSOR_DELAY_NORMAL);
-        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY), SensorManager.SENSOR_DELAY_NORMAL);
+        int delay= prefs.getInt(Constants.FREQ,SensorManager.SENSOR_DELAY_NORMAL);
+
+        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), delay);
+        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY), delay);
 
         /*
          * Get a temporary proximity sensor to get hold of proximity's maximum range
@@ -199,7 +210,7 @@ public class MainScreen extends AppCompatActivity
                 if (lux >= av + floor) {     /*Light is increased. Calculation of the new average*/
                     over = true;
                     under = false;
-                    cancelableUp = schedulerUp.schedule(rUp, Constants.UP_TIME, TimeUnit.SECONDS);
+                    schedulerUp.schedule(rUp, Constants.UP_TIME, TimeUnit.SECONDS);
                 } else if (lux <= av - floor) {   /*Light decreased*/
                     over = false;
                     under = true;
@@ -209,7 +220,7 @@ public class MainScreen extends AppCompatActivity
                         myLightPlayer.start();
                     }
                     /*if light stay low for a period of time we calculate average again*/
-                    cancelableDown = schedulerDown.schedule(rDown, Constants.DOWN_TIME, TimeUnit.SECONDS);
+                    schedulerDown.schedule(rDown, Constants.DOWN_TIME, TimeUnit.SECONDS);
                 } else {
                     over = false;
                     under = false;
@@ -220,13 +231,12 @@ public class MainScreen extends AppCompatActivity
         } else if (sensor.getType() == Sensor.TYPE_PROXIMITY) {
             cm = event.values[0];
             if (cm <= proxFloor) {       /*Warning*/
-                proxToast.show();
-                proxToastIsShowing = true;
-                if (!myLightPlayer.isPlaying()&& !myProxPlayer.isPlaying()) {
-                    myProxPlayer.start();
-                }
+                cancelProx = schedulerProx.scheduleAtFixedRate(proxAlert, 0, 2000, TimeUnit.MILLISECONDS);
             } else {
-                proxToast.cancel();
+                if (cancelProx != null) {
+                    cancelProx.cancel(true);
+                    proxToast.cancel();
+                }
                 proxToastIsShowing = false;
             }
             txtProx.setText("Proximity: " +String.valueOf(cm));

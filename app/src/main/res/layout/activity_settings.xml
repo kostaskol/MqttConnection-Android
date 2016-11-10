@@ -10,31 +10,12 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.project.dilocossuperproject.SettingsActivity">
 
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="64dp"
-        android:id="@+id/light_set" />
-
     <TextView
         android:text="Light security"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="33dp"
         android:id="@+id/textView" />
-
-    <TextView
-        android:text="Proximity security"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="49dp"
-        android:id="@+id/textView2"
-        android:layout_below="@+id/light_set"
-        android:layout_centerHorizontal="true" />
 
 
     <Button
@@ -47,13 +28,31 @@
         android:layout_alignRight="@+id/textView2"
         android:layout_alignEnd="@+id/textView2" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/proximity_linear"
+        android:layout_centerHorizontal="true"
+        android:text="Progress 0/"
+        android:id="@+id/progress_tv"/>
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:id="@+id/light_set"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+        android:id="@+id/proximity_linear"
+        android:layout_below="@+id/textView2"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/proximity_linear">
+        android:layout_marginTop="14dp">
         <TextView
             android:layout_width="0dp"
             android:layout_height="40dp"
@@ -75,11 +74,29 @@
     </LinearLayout>
 
     <TextView
+        android:text="Proximity security"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/proximity_linear"
+        android:layout_marginTop="23dp"
+        android:id="@+id/textView2"
+        android:layout_below="@+id/light_set"
+        android:layout_centerHorizontal="true" />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/save_button"
         android:layout_centerHorizontal="true"
-        android:text="Progress 0/"
-        android:id="@+id/progress_tv"/>
+        android:layout_marginBottom="60dp"
+        android:id="@+id/freq_set" />
+
+    <TextView
+        android:text="Sensor Frequency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3"
+        android:layout_centerVertical="true"
+        android:layout_alignRight="@+id/save_button"
+        android:layout_alignEnd="@+id/save_button" />
 
 </RelativeLayout>
