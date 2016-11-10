@@ -11,7 +11,8 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.project.dilocossuperproject.MainScreen"
-    tools:showIn="@layout/app_bar_main_screen">
+    tools:showIn="@layout/app_bar_main_screen"
+    android:background="@color/colorPrimary">
 
 
     <TextView
@@ -19,20 +20,42 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textLight"
+        android:layout_marginTop="125dp"
         android:layout_below="@+id/textProximity"
         android:layout_alignLeft="@+id/textProximity"
-        android:layout_alignStart="@+id/textProximity"
-        android:layout_marginTop="115dp" />
+        android:layout_alignStart="@+id/textProximity" />
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:srcCompat="@drawable/light_bulb_normal"
+        android:id="@+id/bulb"
+        android:layout_marginBottom="36dp"
+        android:layout_alignBottom="@+id/textLight"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="135dp"
+        android:layout_marginStart="135dp" />
 
     <TextView
         android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textProximity"
-        android:layout_marginRight="110dp"
-        android:layout_marginEnd="110dp"
-        android:layout_marginTop="132dp"
+        android:layout_marginTop="136dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:srcCompat="@drawable/prox_warning"
+        android:id="@+id/prox_img"
+        android:visibility="invisible"
+        android:layout_above="@+id/textLight"
+        android:layout_alignLeft="@+id/textProximity"
+        android:layout_alignStart="@+id/textProximity"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="33dp" />
 </RelativeLayout>

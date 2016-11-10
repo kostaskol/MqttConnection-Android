@@ -19,6 +19,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +53,8 @@ public class MainScreen extends AppCompatActivity
     boolean proxToastIsShowing;
     TextView txtProx;
     TextView txtLight;
+    ImageView bulb;
+    ImageView proxImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +66,6 @@ public class MainScreen extends AppCompatActivity
     }
 
     private void initialise() {
-
-        txtProx = (TextView) findViewById(R.id.textProximity);
-        txtLight = (TextView) findViewById(R.id.textLight);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -79,6 +80,13 @@ public class MainScreen extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        /*
+         * Initialise UI
+         */
+        txtProx = (TextView) findViewById(R.id.textProximity);
+        txtLight = (TextView) findViewById(R.id.textLight);
+        bulb = (ImageView) findViewById(R.id.bulb);
+        proxImg = (ImageView) findViewById(R.id.prox_img);
         /*
          * Initialise both light's and proximity's media players
          */
@@ -102,17 +110,9 @@ public class MainScreen extends AppCompatActivity
         over = under = false;
 
         /*
-         * Both cancelables are necessary for changing the average room's lighting
-         * in case of a change of environment
-         */
-
-
-        /*
          * Get the necessary sensor manager
          */
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-
-
 
         /*
          * Create a shared preferences instance (needed to keep track of user's settings)
@@ -153,6 +153,9 @@ public class MainScreen extends AppCompatActivity
                 proxToastIsShowing = true;
                 if (!myLightPlayer.isPlaying()&& !myProxPlayer.isPlaying()) {
                     myProxPlayer.start();
+                }
+                if (proxImg.getVisibility() == View.INVISIBLE) {
+                    proxImg.setVisibility(View.VISIBLE);
                 }
             }
         };
@@ -207,21 +210,24 @@ public class MainScreen extends AppCompatActivity
             }
             if (av != 0) {
                 floor = av* floorAvg;
-                if (lux >= av + floor) {     /*Light is increased. Calculation of the new average*/
+                if (lux >= av + floor) {     /*Light is increased. Calculate the new average*/
                     over = true;
                     under = false;
                     schedulerUp.schedule(rUp, Constants.UP_TIME, TimeUnit.SECONDS);
+                    bulb.setImageResource(R.drawable.light_bulb_brighter);
                 } else if (lux <= av - floor) {   /*Light decreased*/
                     over = false;
                     under = true;
                     lightToast.show();              /*Warning*/
                     lightToastIsShowing = true;
+                    bulb.setImageResource(R.drawable.light_bulb_darker);
                     if (!myProxPlayer.isPlaying()&&!myLightPlayer.isPlaying()) {
                         myLightPlayer.start();
                     }
                     /*if light stay low for a period of time we calculate average again*/
                     schedulerDown.schedule(rDown, Constants.DOWN_TIME, TimeUnit.SECONDS);
                 } else {
+                    bulb.setImageResource(R.drawable.light_bulb_normal);
                     over = false;
                     under = false;
                     lightToast.cancel();
@@ -238,6 +244,9 @@ public class MainScreen extends AppCompatActivity
                     proxToast.cancel();
                 }
                 proxToastIsShowing = false;
+                if (proxImg.getVisibility() == View.VISIBLE) {
+                    proxImg.setVisibility(View.INVISIBLE);
+                }
             }
             txtProx.setText("Proximity: " +String.valueOf(cm));
         }
