@@ -5,17 +5,12 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.nio.channels.SeekableByteChannel;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -130,7 +125,7 @@ public class SettingsActivity extends AppCompatActivity {
         frequencySet.setAdapter(connect);
 
         /*
-         * Set spinner's default position at user's last choice
+         * Set spinner's default position to user's last choice
          */
         int position = prefs.getInt(Constants.LIGHT, 50);
         switch (position) {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -16,7 +17,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,21 +35,21 @@ public class MainScreen extends AppCompatActivity
 
     SensorManager mSensorManager;
     int times ; /*Used to calculate light average */
-    float proxFloor;
+    float proxFloor; //Low threshold for proximity
     float number, floorAvg;
     float av; /*light average*/
-    boolean over, under;
+    boolean over, under;  //over - under light threshold
     Runnable rUp, rDown, proxAlert;
     private ScheduledFuture  cancelProx;
-    private final ScheduledExecutorService schedulerUp = Executors.newScheduledThreadPool(1);
-    private final ScheduledExecutorService schedulerDown = Executors.newScheduledThreadPool(1);
+    private final ScheduledExecutorService schedulerUp = Executors.newScheduledThreadPool(1);  //Executors required for
+    private final ScheduledExecutorService schedulerDown = Executors.newScheduledThreadPool(1);  //Recurring tasks
     private final ScheduledExecutorService schedulerProx = Executors.newScheduledThreadPool(1);
     SharedPreferences prefs;
     MediaPlayer myLightPlayer;
     MediaPlayer myProxPlayer;
-    Toast lightToast;
-    boolean lightToastIsShowing;
+    Toast lightToast;  //Keep a toast instance (needed to hide the message)
     Toast proxToast;
+    boolean lightToastIsShowing;
     boolean proxToastIsShowing;
     TextView txtProx;
     TextView txtLight;
@@ -106,7 +106,7 @@ public class MainScreen extends AppCompatActivity
          * Make various initialisations, mainly necessary for
          * keeping track of the room's average lighting
          */
-        times = 0; number = av = 0;
+        times = 0; number = av = 0f;
         over = under = false;
 
         /*
@@ -120,7 +120,7 @@ public class MainScreen extends AppCompatActivity
         prefs = getSharedPreferences(Constants.PREFS, MODE_PRIVATE);
 
         /*
-         * Both runnables reset all average required variables so that a new average is calculated
+         * The next two runnables reset all average required variables so that a new average is calculated
          */
 
         rUp = new Runnable() {
@@ -146,6 +146,12 @@ public class MainScreen extends AppCompatActivity
                 }
             }
         };
+
+        /*
+         * This runnable will keep the proximity alert ringing while the proximity sensor
+         * is less than the threshold
+         */
+
         proxAlert= new Runnable() {
             @Override
             public void run() {
@@ -176,8 +182,6 @@ public class MainScreen extends AppCompatActivity
         /*
          * Get a temporary proximity sensor to get hold of proximity's maximum range
          */
-        Sensor tmpSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
-        float max = tmpSensor.getMaximumRange();
 
         /*
          * Get the user's light and proximity protection settings
@@ -201,7 +205,9 @@ public class MainScreen extends AppCompatActivity
 
         if (sensor.getType() == Sensor.TYPE_LIGHT) {
             lux = event.values[0];
-            txtLight.setText("Light: " +String.valueOf(lux));
+            Resources res = getResources();
+            String lightString = String.format(res.getString(R.string.main_light_text_view), lux);
+            txtLight.setText(lightString);
             if (times == 10) {       /*Calculate light average*/
                 av = number/times;
             } else if (times < 10){
@@ -237,7 +243,7 @@ public class MainScreen extends AppCompatActivity
         } else if (sensor.getType() == Sensor.TYPE_PROXIMITY) {
             cm = event.values[0];
             if (cm <= proxFloor) {       /*Warning*/
-                cancelProx = schedulerProx.scheduleAtFixedRate(proxAlert, 0, 2000, TimeUnit.MILLISECONDS);
+                cancelProx = schedulerProx.scheduleAtFixedRate(proxAlert, 0, 2, TimeUnit.SECONDS);
             } else {
                 if (cancelProx != null) {
                     cancelProx.cancel(true);
@@ -248,7 +254,9 @@ public class MainScreen extends AppCompatActivity
                     proxImg.setVisibility(View.INVISIBLE);
                 }
             }
-            txtProx.setText("Proximity: " +String.valueOf(cm));
+            Resources res = getResources();
+            String proxString = String.format(res.getString(R.string.main_proximity_text_view), (int) cm);
+            txtProx.setText(proxString);
         }
     }
 
@@ -264,16 +272,10 @@ public class MainScreen extends AppCompatActivity
             DialogInterface.OnClickListener positive= new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                   exit();                                                      /*Function exiet()*/
+                   exit();
                 }
             };
-            DialogInterface.OnClickListener negative = new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                }
-            };
-            AlertBuilder alert= new AlertBuilder(this, mes, title,positive,negative );
+            AlertBuilder alert= new AlertBuilder(this, mes, title,positive,null);
             alert.showDialog();
         }
 

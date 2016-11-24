@@ -7,6 +7,10 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+/*
+ * Simple splash screen
+ */
+
 public class SplashScreen extends AppCompatActivity {
 
     @Override

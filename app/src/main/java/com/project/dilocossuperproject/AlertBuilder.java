@@ -8,13 +8,13 @@ import android.support.v7.app.AlertDialog;
  * Simple Alert Builder class for easier Alert Dialog building
  */
 
-public class AlertBuilder {
+class AlertBuilder {
     private Context context;
     private String message;
     private String title;
     private DialogInterface.OnClickListener positive;
     private DialogInterface.OnClickListener negative;
-    public AlertBuilder (Context context, String message, String title, DialogInterface.OnClickListener positive,
+    AlertBuilder (Context context, String message, String title, DialogInterface.OnClickListener positive,
                          DialogInterface.OnClickListener negative) {
         this.context = context;
         this.message = message;

@@ -7,4 +7,16 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <!-- Settings Strings -->
+    <string name="settings_light_safety">Light Safety</string>
+    <string name="settings_save_btn">Save Settings</string>
+    <string name="settings_progress_static">Progress 0/</string>
+    <string name="settings_seek_start">0</string>
+    <string name="settings_prox_safety">Proximity Safety</string>
+    <string name="settings_sensor_freq">Sensor Frequency</string>
+
+    <!-- MainScreen Strings -->
+    <string name="main_light_text_view">Light: %1$f</string>
+    <string name="main_proximity_text_view">Proximity: %1$d</string>
 </resources>

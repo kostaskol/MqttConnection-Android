@@ -1,7 +1,9 @@
 package com.project.dilocossuperproject;
 
-
-public class Constants {
+/*
+ * Constants required for shared preferences (mostly)
+ */
+class Constants {
     static final String PREFS = "my_preferences";
     static final String LIGHT = "light";
     static final String PROX = "proximity";
