@@ -3,4 +3,7 @@
     <color name="colorPrimary">#1D91C5</color>
     <color name="colorPrimaryDark">#24769C</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="online_warning">#E6E61A</color>
+    <color name="online_danger">#FF0000</color>
+    <color name="online_safe">#1D91C5</color>
 </resources>

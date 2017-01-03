@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_settings"
     android:layout_width="match_parent"
@@ -8,97 +9,169 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.project.dilocossuperproject.SettingsActivity"
+    tools:context="com.project.Activities.SettingsActivity"
     android:background="@color/colorPrimary">
 
-    <TextView
-        android:text="@string/settings_light_safety"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/textView" />
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/proximity_linear"
-        android:layout_centerHorizontal="true"
-        android:text="@string/settings_progress_static"
-        android:id="@+id/progress_tv"/>
-
-    <Spinner
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:id="@+id/light_set"
-        android:layout_below="@+id/textView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/proximity_linear"
-        android:layout_below="@+id/textView2"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="14dp">
+        android:id="@+id/settings_offline_layout">
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:text="@string/settings_seek_start"/>
-
-        <SeekBar
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="8"
-            android:layout_marginTop="33dp"
-            android:id="@+id/proximity_set" />
+            android:text="Offline Mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:id="@+id/textView5" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:id="@+id/seek_max_range"/>
-    </LinearLayout>
+            android:text="@string/settings_light_safety"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="25dp" />
 
-    <TextView
-        android:text="@string/settings_prox_safety"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="23dp"
-        android:id="@+id/textView2"
-        android:layout_below="@+id/light_set"
-        android:layout_centerHorizontal="true" />
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/light_set"
+            android:layout_below="@+id/textView" />
 
-    <Spinner
+        <TextView
+            android:text="@string/settings_prox_safety"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView2"
+            android:layout_below="@+id/light_set"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="29dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/proximity_linear"
+            android:layout_below="@+id/textView2"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="@string/settings_seek_start"/>
+
+            <SeekBar
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="8"
+                android:layout_marginTop="33dp"
+                android:id="@+id/proximity_set" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:id="@+id/seek_max_range"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_progress_static"
+            android:id="@+id/progress_tv"
+            android:layout_below="@+id/proximity_linear"
+            android:layout_alignRight="@+id/textView"
+            android:layout_alignEnd="@+id/textView" />
+
+    </RelativeLayout>
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/save_button"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="60dp"
-        android:id="@+id/freq_set" />
+        android:layout_below="@+id/settings_offline_layout"
+        android:layout_above="@+id/save_button">
+
+        <TextView
+            android:text="Online Mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/mode_switch"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="27dp" />
+
+        <Switch
+            android:text="@string/settings_online_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/mode_switch"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="33dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/settings_online_label_linear"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+            <TextView
+                android:text="Connection URL"
+                android:layout_width="0dp"
+                android:layout_weight="4"
+                android:layout_height="match_parent"
+                android:id="@+id/settings_online_conn_url_text" />
+
+            <TextView
+                android:text="Port"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/settings_online_edit_linear"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="45dp">
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_weight="3.42"
+                android:layout_height="match_parent"
+                android:inputType="textUri"
+                android:text="tcp://localhost"
+                android:ems="10"
+                android:id="@+id/settings_online_conn_url"
+                android:layout_marginRight="30dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginTop="10dp"
+                android:textStyle="normal|italic" />
+
+            <EditText
+                android:id="@+id/settings_online_port"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:inputType="number"
+                android:layout_height="match_parent"
+                android:text="1883"/>
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
 
     <Button
         android:text="@string/settings_save_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/save_button"
-        android:layout_marginBottom="67dp"
+        android:background="@color/colorPrimaryDark"
         android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/textView2"
-        android:layout_alignStart="@+id/textView2"
-        android:background="@color/colorPrimaryDark"/>
+        android:layout_centerHorizontal="true" />
 
-    <TextView
-        android:text="@string/settings_sensor_freq"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView3"
-        android:layout_centerVertical="true"
-        android:layout_alignLeft="@+id/save_button"
-        android:layout_alignStart="@+id/save_button" />
 
 </RelativeLayout>
