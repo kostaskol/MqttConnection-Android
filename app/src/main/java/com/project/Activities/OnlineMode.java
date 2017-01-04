@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -27,6 +28,7 @@ import com.project.HelpClasses.Constants;
 import com.project.MQTT.MqttConnectionCallback;
 import com.project.MQTT.MqttManager;
 import com.project.sensors.MySensorManager;
+import com.project.sensors.SensorCallback;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -34,16 +36,13 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class OnlineMode extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MqttConnectionCallback {
+        implements NavigationView.OnNavigationItemSelectedListener, MqttConnectionCallback, SensorCallback {
 
     private TextView statusText;
     private MqttManager mqttManager;
     private GpsManager gpsManager;
     private SharedPreferences prefs;
     private String clientId;
-
-    private final ScheduledExecutorService schedulerGetValues = Executors.newScheduledThreadPool(1);
-    private ScheduledFuture cancelScheduler;
 
     MySensorManager mySensorManager;
 
@@ -57,6 +56,9 @@ public class OnlineMode extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_online_mode);
 
+
+
+
         initialise();
 
     }
@@ -64,18 +66,33 @@ public class OnlineMode extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
-        Intent tmp = getIntent();
-        if (!tmp.hasExtra(Constants.PERSIST_INTO_MODE)) {
-            if (prefs.getInt(Constants.PREFERRED_MODE, Constants.MODE_ONLINE) != Constants.MODE_ONLINE) {
-                goOffline();
-            }
+        if (clientId != null) {
+            mqttManager = new MqttManager(clientId, this);
+        } else {
+            Log.e("NO ID SAVED", "There is no saved ID on this device. Why didn't splash screen catch that?");
         }
 
+        if (!mqttManager.connect()) {
+            goOffline(Constants.REASON_CLIENT_NOT_CONNECTED);
+        }
+
+        mySensorManager = new MySensorManager(this);
+        mySensorManager.start();
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        if (clientId != null) {
+            mqttManager = new MqttManager(clientId, this);
+        } else {
+            Log.e("NO ID SAVED", "There is no saved ID on this device. Why didn't splash screen catch that?");
+        }
+
+        if (!mqttManager.connect()) {
+            goOffline(Constants.REASON_CLIENT_NOT_CONNECTED);
+        }
+
     }
 
     private void initialise() {
@@ -92,8 +109,16 @@ public class OnlineMode extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        statusText = (TextView) findViewById(R.id.online_status_text_view);
         prefs = getSharedPreferences(Constants.PREFS, MODE_PRIVATE);
+
+        Intent tmp = getIntent();
+        if (!tmp.hasExtra(Constants.PERSIST_INTO_MODE)) {
+            if (prefs.getInt(Constants.PREFERRED_MODE, Constants.MODE_ONLINE) != Constants.MODE_ONLINE) {
+                goOffline("");
+            }
+        }
+
+        statusText = (TextView) findViewById(R.id.online_status_text_view);
 
         gpsManager = new GpsManager(Constants.INTERVAL, this);
         gpsManager.start();
@@ -102,37 +127,15 @@ public class OnlineMode extends AppCompatActivity
         warningPlayer = MediaPlayer.create(this, R.raw.online_sound_warning);
         dangerPlayer = MediaPlayer.create(this, R.raw.online_sound_danger);
 
-        if (clientId != null) {
-            mqttManager = new MqttManager(clientId, this);
-        } else {
-            Log.e("NO ID SAVED", "There is no saved ID on this device. Why didn't splash screen catch that?");
-        }
-
-        if (!mqttManager.connect()) {
-            Log.e("MQTT ERROR", "Mqtt client could not connect");
-            goOffline();
-        }
-
-        mySensorManager = new MySensorManager(this);
-        mySensorManager.start();
-
         Animation anim = new AlphaAnimation(1.0f, 0.3f);
         anim.setRepeatMode(Animation.REVERSE);
         anim.setRepeatCount(Animation.INFINITE);
         anim.setDuration(600);
         statusText.startAnimation(anim);
-
-
-        cancelScheduler = schedulerGetValues.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                String[] sensorValues = mySensorManager.getValues();
-                onSensorValuesChanged(sensorValues[0], sensorValues[1]);
-            }
-        }, SensorManager.SENSOR_DELAY_NORMAL + 1, SensorManager.SENSOR_DELAY_NORMAL, TimeUnit.MILLISECONDS);
     }
 
-    private void onSensorValuesChanged(String lightVal, String proxVal) {
+    @Override
+    public void onSensorValuesChanged(String lightVal, String proxVal) {
         String latitude = gpsManager.getLatitude();
         String longitude = gpsManager.getLongitude();
         mqttManager.publish(Constants.CLIENT_TOPIC, clientFormat(clientId, latitude,
@@ -144,17 +147,28 @@ public class OnlineMode extends AppCompatActivity
     }
 
     @Override
-    public void notifyCaller(boolean ack) {
-        if (!ack) {
-            // The main client seems to not be connected. Fall back to offline mode
-            Log.e("MQTT", "Main Client did not acknowledge us. Disconnecting");
-            mqttManager.disconnect();
-            goOffline();
-        }
+    public void notifyCaller(final boolean ack) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (!ack) {
+                    // The main client seems to not be connected. Fall back to offline mode
+                    Log.e("MQTT", "Main Client did not acknowledge us. Disconnecting");
+                    mqttManager.disconnect();
+                    goOffline(Constants.REASON_CLIENT_NOT_CONNECTED);
+                } else {
+                    mqttManager.finaliseConnection();
+                }
+            }
+        });
+
     }
 
     @Override
     public void soundWarning() {
+        if (warningPlayer == null) {
+            warningPlayer = MediaPlayer.create(this, R.raw.online_sound_warning);
+        }
         if (!warningPlayer.isPlaying()) {
             warningPlayer.start();
         }
@@ -166,6 +180,9 @@ public class OnlineMode extends AppCompatActivity
 
     @Override
     public void soundDanger() {
+        if (dangerPlayer == null) {
+            dangerPlayer = MediaPlayer.create(this, R.raw.online_sound_danger);
+        }
         if (!dangerPlayer.isPlaying()) {
             dangerPlayer.start();
         }
@@ -183,11 +200,15 @@ public class OnlineMode extends AppCompatActivity
                 statusText.clearAnimation();
             }
         });
-        if (warningPlayer.isPlaying()) {
-            warningPlayer.stop();
+        if (warningPlayer != null) {
+            if (warningPlayer.isPlaying()) {
+                warningPlayer.stop();
+            }
         }
-        if (dangerPlayer.isPlaying()) {
-            dangerPlayer.stop();
+        if (dangerPlayer != null) {
+            if (dangerPlayer.isPlaying()) {
+                dangerPlayer.stop();
+            }
         }
         if (warningToast != null) {
             warningToast.cancel();
@@ -231,9 +252,9 @@ public class OnlineMode extends AppCompatActivity
 
     public void stop() {
         stopSounds();
-        if (cancelScheduler != null) {
-            cancelScheduler.cancel(true);
-            Log.d("DEBUG", "Canceled scheduler");
+        if (mySensorManager != null) {
+            mySensorManager.stop();
+            mySensorManager = null;
         }
     }
 
@@ -242,11 +263,11 @@ public class OnlineMode extends AppCompatActivity
         finishAffinity();
     }
 
-    private void goOffline() {
+    private void goOffline(String reason) {
         Log.d("DEBUG", "Starting offline mode");
         stop();
-        startActivity(new Intent(OnlineMode.this, OfflineMode.class).putExtra(Constants.PERSIST_INTO_MODE, ""));
         finish();
+        startActivity(new Intent(OnlineMode.this, OfflineMode.class).putExtra(Constants.PERSIST_INTO_MODE, reason));
     }
 
     @Override
@@ -273,13 +294,14 @@ public class OnlineMode extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         switch (id) {
             case R.id.nav_exit:
                 exit();
+                break;
             case R.id.nav_settings:
                 stop();
                 finish();
