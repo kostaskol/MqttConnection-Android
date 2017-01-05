@@ -50,7 +50,8 @@ public class AlertBuilder {
                     .setTitle(title)
                     .setMessage(message)
                     .setIcon(android.R.drawable.stat_sys_warning)
-                    .setNegativeButton(android.R.string.ok, positive)
+                    .setPositiveButton(android.R.string.ok, positive)
+                    .setCancelable(false)
                     .show();
         } else if (this.positiveText != null && this.negativeText != null){
             new AlertDialog.Builder(context)
@@ -59,6 +60,7 @@ public class AlertBuilder {
                     .setIcon(android.R.drawable.stat_sys_warning)
                     .setNegativeButton(this.negativeText, negative)
                     .setPositiveButton(this.positiveText, positive)
+                    .setCancelable(false)
                     .show();
         } else {
             new AlertDialog.Builder(context)
@@ -67,8 +69,8 @@ public class AlertBuilder {
                     .setIcon(android.R.drawable.stat_sys_warning)
                     .setNegativeButton(android.R.string.no, negative)
                     .setPositiveButton(android.R.string.yes, positive)
+                    .setCancelable(false)
                     .show();
-
         }
     }
 }

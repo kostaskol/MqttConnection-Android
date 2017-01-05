@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,15 +28,21 @@ import com.project.GPS.OnlineAvailabilityChecker;
 import com.project.HelpClasses.AlertBuilder;
 import com.project.HelpClasses.Constants;
 import com.project.MQTT.MqttConnectionCallback;
+import com.project.MQTT.MqttManager;
 import com.project.sensors.MySensorManager;
+import com.project.sensors.SensorCallback;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class OfflineMode extends AppCompatActivity implements
-                            NavigationView.OnNavigationItemSelectedListener, MqttConnectionCallback {
+        NavigationView.OnNavigationItemSelectedListener,
+        MqttConnectionCallback,
+        SensorCallback {
 
     private MySensorManager mySensorManager;
     private int times ; /*Used to calculate light average */
@@ -43,10 +51,8 @@ public class OfflineMode extends AppCompatActivity implements
     private float av; /*light average*/
     private boolean over, under;  //over - under light threshold
     private Runnable rUp, rDown, proxAlert;
-    private ScheduledFuture cancelUpdates;
     private final ScheduledExecutorService schedulerUp = Executors.newScheduledThreadPool(1);  //Executors required for
     private final ScheduledExecutorService schedulerDown = Executors.newScheduledThreadPool(1);  //Recurring tasks
-    private final ScheduledExecutorService schedulerGetValues = Executors.newScheduledThreadPool(1);
     private SharedPreferences prefs;
     private MediaPlayer myLightPlayer;
     private MediaPlayer myProxPlayer;
@@ -59,18 +65,18 @@ public class OfflineMode extends AppCompatActivity implements
     private ImageView bulb;
     private ImageView proxImg;
     private Context offlineContext;
+    private MqttManager mqttManager;
+    private boolean stopRecon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_offline_mode);
 
-        initialise();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
+         /*
+         * Create a shared preferences instance (needed to keep track of user's settings)
+         */
+        prefs = getSharedPreferences(Constants.PREFS, MODE_PRIVATE);
 
         Intent tmp = getIntent();
         if (!tmp.hasExtra(Constants.PERSIST_INTO_MODE)) {
@@ -101,9 +107,53 @@ public class OfflineMode extends AppCompatActivity implements
                     }
                 }
             }
+        } else {
+            String reason = tmp.getStringExtra(Constants.PERSIST_INTO_MODE);
+            if (reason.equals(Constants.REASON_CLIENT_NOT_CONNECTED)) {
+                String title = "Offline Mode";
+                String message = "You have been brought to Offline Mode because " + reason + "" +
+                        "Would you like the application to automatically try to reconnect?";
+                DialogInterface.OnClickListener positive = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        final Handler handler = new Handler();
+                        Runnable recon = new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!stopRecon) {
+                                    Log.w("RECON", "Reconnecting");
+                                    String id = prefs.getString(Constants.CLIENT_ID, null);
+                                    if (id == null) {
+                                        Log.e("NO ID", "Why didn't splash screen catch this?");
+                                    }
+                                    mqttManager = new MqttManager(id, OfflineMode.this);
+                                    Log.d("MQTT", "Trying to reconnect");
+                                    mqttManager.connect();
+                                    handler.postDelayed(this, 3 * 1000);
+                                }
+                            }
+                        };
+                        recon.run();
+                    }
+                };
+
+                DialogInterface.OnClickListener negative = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                };
+                AlertBuilder alert = new AlertBuilder(this, message, title, positive, negative);
+                alert.showDialog();
+            }
         }
 
+        initialise();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
         /*
          * Get the user's light and proximity protection settings
          */
@@ -169,10 +219,6 @@ public class OfflineMode extends AppCompatActivity implements
         times = 0; number = av = 0f;
         over = under = false;
 
-        /*
-         * Create a shared preferences instance (needed to keep track of user's settings)
-         */
-        prefs = getSharedPreferences(Constants.PREFS, MODE_PRIVATE);
 
         /*
          * The next two runnables reset all average required variables so that a new average is calculated
@@ -202,26 +248,9 @@ public class OfflineMode extends AppCompatActivity implements
             }
         };
 
-        Runnable getValues = new Runnable() {
-            @Override
-            public void run() {
-                final String[] vals = mySensorManager.getValues();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        onSensorValuesChanged(vals[0], vals[1]);
-                    }
-                });
-            }
-        };
-
-        cancelUpdates = schedulerGetValues.scheduleAtFixedRate(getValues,
-                SensorManager.SENSOR_DELAY_NORMAL + 3,
-                SensorManager.SENSOR_DELAY_NORMAL,
-                TimeUnit.MILLISECONDS);
-
     }
 
+    @Override
     public void onSensorValuesChanged(String lightVal, String proxVal) {
         float lux;
         float cm;
@@ -231,8 +260,13 @@ public class OfflineMode extends AppCompatActivity implements
         }
         lux = Float.valueOf(lightVal);
         Resources res = offlineContext.getResources();
-        String lightString = String.format(res.getString(R.string.main_light_text_view), lux);
-        txtLight.setText(lightString);
+        final String lightString = String.format(res.getString(R.string.main_light_text_view), lux);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                txtLight.setText(lightString);
+            }
+        });
         if (times == 10) {       /*Calculate light average*/
             av = number / times;
         } else if (times < 10) {
@@ -246,20 +280,35 @@ public class OfflineMode extends AppCompatActivity implements
                 over = true;
                 under = false;
                 schedulerUp.schedule(rUp, Constants.UP_TIME, TimeUnit.SECONDS);
-                bulb.setImageResource(R.drawable.light_bulb_brighter);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        bulb.setImageResource(R.drawable.light_bulb_brighter);
+                    }
+                });
             } else if (lux <= av - floor) {   /*Light decreased*/
                 over = false;
                 under = true;
                 lightToast.show();              /*Warning*/
                 lightToastIsShowing = true;
-                bulb.setImageResource(R.drawable.light_bulb_darker);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        bulb.setImageResource(R.drawable.light_bulb_darker);
+                    }
+                });
                 if (!myProxPlayer.isPlaying() && !myLightPlayer.isPlaying()) {
                     myLightPlayer.start();
                 }
             /*if light stay low for a period of time we calculate average again*/
                 schedulerDown.schedule(rDown, Constants.DOWN_TIME, TimeUnit.SECONDS);
             } else {
-                bulb.setImageResource(R.drawable.light_bulb_normal);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        bulb.setImageResource(R.drawable.light_bulb_normal);
+                    }
+                });
                 over = false;
                 under = false;
                 lightToast.cancel();
@@ -288,8 +337,13 @@ public class OfflineMode extends AppCompatActivity implements
             proxToastIsShowing = false;
         }
 
-        String proxString = String.format(res.getString(R.string.main_proximity_text_view), (int) cm);
-        txtProx.setText(proxString);
+        final String proxString = String.format(res.getString(R.string.main_proximity_text_view), (int) cm);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                txtProx.setText(proxString);
+            }
+        });
     }
 
     @Override
@@ -345,12 +399,19 @@ public class OfflineMode extends AppCompatActivity implements
 
     @Override
     public void notifyCaller(boolean ack) {
+        Log.d("MQTT", "Caller notified: " + ack);
         if (ack) {
             // This means that both the broker and the client
             // are online. If the user has chosen online mode as
             // the preferred mode of operation, we start the
             // corresponding activity
-            goOnline();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    goOnline();
+                }
+            });
+
         }
     }
 
@@ -367,26 +428,35 @@ public class OfflineMode extends AppCompatActivity implements
         /*
          * Stop the warnings
          */
-        if (myLightPlayer.isPlaying()) {
-            myLightPlayer.stop();
+        if (myLightPlayer != null) {
+            if (myLightPlayer.isPlaying()) {
+                myLightPlayer.stop();
+            }
         }
-        if (myProxPlayer.isPlaying()) {
-            myProxPlayer.stop();
+        if (myProxPlayer != null) {
+            if (myProxPlayer.isPlaying()) {
+                myProxPlayer.stop();
+            }
         }
         if (proxToastIsShowing) {
-            proxToast.cancel();
+            if (proxToast != null) {
+                proxToast.cancel();
+            }
         }
         if (lightToastIsShowing) {
-            lightToast.cancel();
+            if (lightToast != null) {
+                lightToast.cancel();
+            }
         }
         if (mySensorManager != null) {
-            mySensorManager.stop();
+            Log.w("SENSOR", "Stopping sensor manager");
+            mySensorManager.unregisterListeners();
+            mySensorManager.interrupt();
             mySensorManager = null;
         }
-        if (cancelUpdates != null) {
-            cancelUpdates.cancel(true);
-            cancelUpdates = null;
-        }
+
+        this.stopRecon = true;
+        Log.w("OFFLINE MODE", "OFFLINE MODE STOPPING!!!!!!!!!!!!!!");
     }
 
     public void exit() {
@@ -396,7 +466,8 @@ public class OfflineMode extends AppCompatActivity implements
 
     private void goOnline() {
         stop();
-        startActivity(new Intent(OfflineMode.this, OnlineMode.class));
         finish();
+
+        startActivity(new Intent(OfflineMode.this, OnlineMode.class));
     }
 }

@@ -4,6 +4,8 @@
       <root url="jar://$PROJECT_DIR$/libs/org.eclipse.paho.android.service-1.0.2.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.eclipse.paho/org.eclipse.paho.android.service/1.0.2/d1de776645c8f9ae04eaf0c9d46b8ced9d39387e/org.eclipse.paho.android.service-1.0.2-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>

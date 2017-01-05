@@ -32,13 +32,15 @@ public class Constants {
     public static final String CONNECTION_TOPIC = "connections";
     public static final String CONNECTED_TOPIC = CONNECTION_TOPIC + "/connected/";
     public static final String NEW_CONNECTION_TOPIC = CONNECTION_TOPIC + "/newConnections";
-    public static final String CONNECTED_TOPIC_SIMPLE = "connected";
+    public static final String REQUEST_ACKNOWLEDGEMENT_TOPIC = CONNECTION_TOPIC + "/requestAck";
     public static final String CONNECTED_ACKNOWLEDGE_TOPIC = "/acknowledged";
     public static final String ACKNOWLEDGE = "acknowledged id";
     public static final String TOPIC_WARNING = "/warning";
     public static final String TOPIC_DANGER = "/danger";
     public static final String TOPIC_STOP_WARNING = "/stopSounds";
     public static String CLIENT_TOPIC;
+    public static String LAST_WILL_TOPIC = "mainClient/disconnected";
+    public static String MAIN_CLIENT_DISCONNECTING = "disconnecting";
 
     /*
      * Mqtt Message Constants
@@ -50,4 +52,7 @@ public class Constants {
 
 
     public static final String PERSIST_INTO_MODE = "persist";
+
+    public static final String REASON_CLIENT_NOT_CONNECTED = " a connection could not be established" +
+            " with the main client. ";
 }

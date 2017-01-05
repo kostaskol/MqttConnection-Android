@@ -56,9 +56,6 @@ public class OnlineMode extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_online_mode);
 
-
-
-
         initialise();
 
     }
@@ -77,23 +74,14 @@ public class OnlineMode extends AppCompatActivity
         }
 
         mySensorManager = new MySensorManager(this);
-        mySensorManager.start();
     }
 
-    @Override
+    /*@Override
     public void onStart() {
         super.onStart();
-        if (clientId != null) {
-            mqttManager = new MqttManager(clientId, this);
-        } else {
-            Log.e("NO ID SAVED", "There is no saved ID on this device. Why didn't splash screen catch that?");
-        }
+        onResume();
 
-        if (!mqttManager.connect()) {
-            goOffline(Constants.REASON_CLIENT_NOT_CONNECTED);
-        }
-
-    }
+    }*/
 
     private void initialise() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -157,11 +145,12 @@ public class OnlineMode extends AppCompatActivity
                     mqttManager.disconnect();
                     goOffline(Constants.REASON_CLIENT_NOT_CONNECTED);
                 } else {
+                    Log.d("MQTT", "Finalising connection");
                     mqttManager.finaliseConnection();
+                    mySensorManager.start();
                 }
             }
         });
-
     }
 
     @Override
@@ -253,7 +242,8 @@ public class OnlineMode extends AppCompatActivity
     public void stop() {
         stopSounds();
         if (mySensorManager != null) {
-            mySensorManager.stop();
+            mySensorManager.unregisterListeners();
+            mySensorManager.interrupt();
             mySensorManager = null;
         }
     }

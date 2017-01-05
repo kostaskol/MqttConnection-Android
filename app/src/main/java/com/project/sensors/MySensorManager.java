@@ -9,19 +9,24 @@ import android.util.Log;
 
 import static android.content.Context.SENSOR_SERVICE;
 
-public class MySensorManager implements SensorEventListener {
+public class MySensorManager extends Thread implements SensorEventListener {
 
     private String proxVal;
     private String lightVal;
     private SensorManager mSensorManager;
+    private SensorCallback callback;
+
+    public MySensorManager() {}
 
     public MySensorManager(Context context) {
         mSensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
+        callback = (SensorCallback) context;
         Sensor sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         this.proxVal = String.valueOf(sensor.getMaximumRange());
     }
 
-    public void start() {
+    @Override
+    public void run() {
         Log.d ("DEBUG", "Sensor Manager called");
         /*
          * Get the necessary sensor manager
@@ -34,12 +39,9 @@ public class MySensorManager implements SensorEventListener {
                 SensorManager.SENSOR_DELAY_NORMAL);
     }
 
-    public void stop() {
-        mSensorManager.unregisterListener(this);
-    }
-
-    public String[] getValues() {
-        return new String[] {this.lightVal, this.proxVal};
+    public void unregisterListeners() {
+        mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT));
+        mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY));
     }
 
     @Override
@@ -50,6 +52,8 @@ public class MySensorManager implements SensorEventListener {
         } else if (sensor.getType() == Sensor.TYPE_PROXIMITY) {
             this.proxVal = String.valueOf(event.values[0]);
         }
+
+        callback.onSensorValuesChanged(this.lightVal, this.proxVal);
     }
 
     @Override
