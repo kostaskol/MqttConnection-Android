@@ -1,5 +1,6 @@
 package com.project.MQTT;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
@@ -16,12 +17,9 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
-import static android.os.Looper.prepare;
 
 public class MqttManager implements MqttCallback {
     private MqttClient client;
-    private SharedPreferences prefs;
-    private AcknowledgementHandler ackHandler;
     private boolean connectionAcknowledged = false;
 
     private Context context;
@@ -31,15 +29,14 @@ public class MqttManager implements MqttCallback {
     private MqttConnectionCallback callback;
 
 
-    public MqttManager(String id, Context context) {
+    public MqttManager(String id, Activity callerActivity) {
         this.id = id;
-        this.context = context;
-        this.callback = (MqttConnectionCallback) context;
+        this.context = callerActivity;
+        this.callback = (MqttConnectionCallback) callerActivity;
         Constants.CLIENT_TOPIC = Constants.CONNECTED_TOPIC + this.id;
         SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS, Context.MODE_PRIVATE);
         String connUrl = prefs.getString(Constants.MQTT_CONNECTION_URL, "tcp://192.168.1.3");
         String port = prefs.getString(Constants.MQTT_PORT, "1883");
-        ackHandler = new AcknowledgementHandler("ACKNOWLEDGEMENT THREAD", callback);
         try {
             this.client = new MqttClient(connUrl + ":" + port, id, new MemoryPersistence());
         } catch (MqttException e) {
@@ -63,7 +60,7 @@ public class MqttManager implements MqttCallback {
                 }
             }, 3 * 1000);
             publish(Constants.REQUEST_ACKNOWLEDGEMENT_TOPIC, this.id);
-            subscribe(Constants.CLIENT_TOPIC + Constants.CONNECTED_ACKNOWLEDGE_TOPIC);
+            subscribe(Constants.CLIENT_TOPIC + Constants.CONNECTED_ACKNOWLEDGE_TOPIC, 2);
             finaliseConnection();
             Log.d("MQTT", "Ack topic: " + Constants.CONNECTED_TOPIC + this.id + Constants.CONNECTED_ACKNOWLEDGE_TOPIC);
             return true;
@@ -73,10 +70,10 @@ public class MqttManager implements MqttCallback {
         }
     }
 
-    private void subscribe(String topic) {
+    private void subscribe(String topic, int QoS) {
         Log.d("MQTT", "Subscribing to topic: " + topic);
         try {
-            this.client.subscribe(topic);
+            this.client.subscribe(topic, QoS);
         } catch (MqttException e) {
             e.printStackTrace();
         }
@@ -84,7 +81,7 @@ public class MqttManager implements MqttCallback {
 
     public void publish(String topic, String message) {
         MqttMessage m = new MqttMessage(message.getBytes());
-        m.setQos(0);
+        // m.setQos(0);
         try {
             this.client.publish(topic, m);
         } catch (MqttException e) {
@@ -95,10 +92,10 @@ public class MqttManager implements MqttCallback {
     public void finaliseConnection() {
         if (this.client.isConnected()) {
             this.publish(Constants.NEW_CONNECTION_TOPIC, this.id);
-            subscribe(Constants.CLIENT_TOPIC + Constants.TOPIC_WARNING);
-            subscribe(Constants.CLIENT_TOPIC + Constants.TOPIC_DANGER);
-            subscribe(Constants.CLIENT_TOPIC + Constants.TOPIC_STOP_WARNING);
-            subscribe(Constants.LAST_WILL_TOPIC);
+            subscribe(Constants.CLIENT_TOPIC + Constants.TOPIC_WARNING, 2);
+            subscribe(Constants.CLIENT_TOPIC + Constants.TOPIC_DANGER, 2);
+            subscribe(Constants.CLIENT_TOPIC + Constants.TOPIC_STOP_WARNING, 2);
+            subscribe(Constants.LAST_WILL_TOPIC, 2);
         } else {
             Log.e("MQTT", "Mqtt Client is not connected (why?)");
         }
