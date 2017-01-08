@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.hardware.SensorManager;
-import android.media.MediaPlayer;
 import android.os.Handler;
-import android.os.Looper;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -27,18 +27,20 @@ import android.widget.Toast;
 import com.project.GPS.OnlineAvailabilityChecker;
 import com.project.HelpClasses.AlertBuilder;
 import com.project.HelpClasses.Constants;
+import com.project.HelpClasses.MyMediaPlayer;
 import com.project.MQTT.MqttConnectionCallback;
 import com.project.MQTT.MqttManager;
 import com.project.sensors.MySensorManager;
 import com.project.sensors.SensorCallback;
 
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Activity that warns the user about imminent danger
+ * by calculating the phone's light and proximity sensors.
+ */
 public class OfflineMode extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         MqttConnectionCallback,
@@ -54,8 +56,8 @@ public class OfflineMode extends AppCompatActivity implements
     private final ScheduledExecutorService schedulerUp = Executors.newScheduledThreadPool(1);  //Executors required for
     private final ScheduledExecutorService schedulerDown = Executors.newScheduledThreadPool(1);  //Recurring tasks
     private SharedPreferences prefs;
-    private MediaPlayer myLightPlayer;
-    private MediaPlayer myProxPlayer;
+    private MyMediaPlayer lightPlayer;
+    private MyMediaPlayer proxPlayer;
     private Toast lightToast;  //Keep a toast instance (needed to hide the message)
     private Toast proxToast;
     private boolean lightToastIsShowing;
@@ -63,111 +65,134 @@ public class OfflineMode extends AppCompatActivity implements
     private TextView txtProx;
     private TextView txtLight;
     private ImageView bulb;
-    private ImageView proxImg;
     private Context offlineContext;
     private MqttManager mqttManager;
     private boolean stopRecon;
+    private AlertBuilder gpsAlert;
+    private AlertBuilder internetAlert;
+    private boolean shouldRequestPermissions = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_offline_mode);
 
-         /*
+        /*
          * Create a shared preferences instance (needed to keep track of user's settings)
          */
         prefs = getSharedPreferences(Constants.PREFS, MODE_PRIVATE);
 
-        Intent tmp = getIntent();
-        if (!tmp.hasExtra(Constants.PERSIST_INTO_MODE)) {
-            Log.d ("DEBUG", "INTENT DOES NOT HAVE EXTRA");
-            if (prefs.getInt(Constants.PREFERRED_MODE, Constants.MODE_OFFLINE) != Constants.MODE_OFFLINE) {
+        {
+            String title = "Internet connection not available";
+            String message = "The Main Client has connected but your phone does not have connection to the internet." +
+                    "Please connect to the internet (WiFi/Mobile Data)" +
+                    "(You will be unable to switch to Online Mode if you do not)";
+            internetAlert = new AlertBuilder(this, message, title);
+        }
+
+
+        {
+            String title = "GPS Service turned off";
+            String message = "The Main Client has connected but your phone's GPS Service is turned off." +
+                    "Would you like to be taken to the settings screen to turn it on? " +
+                    "(You will be unable to switch to Online Mode if you do not)";
+            DialogInterface.OnClickListener positive = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                }
+            };
+
+            DialogInterface.OnClickListener negative = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    stopRecon = true;
+                }
+            };
+            gpsAlert = new AlertBuilder(this, message, title, positive, negative);
+        }
+
+
+        /*
+         * If the user did not choose to be in offline mode,
+         * we should notify the user about the problem that brought them into offline mode
+         * and try to go to Online Mode
+         */
+        if (prefs.getInt(Constants.PREFERRED_MODE, Constants.MODE_OFFLINE) != Constants.MODE_OFFLINE) {
             /*
-             * The activity has resumed from the SettingsActivity and the user has switched to online mode
-             *
+             * The activity has been started from SettingsActivity and the user has switched to online mode
              */
-                OnlineAvailabilityChecker checker = new OnlineAvailabilityChecker(this);
-                checker.start();
-                try {
-                    checker.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            OnlineAvailabilityChecker checker = new OnlineAvailabilityChecker(this);
+            checker.start();
+            try {
+                checker.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            if (shouldRequestPermissions) {
+                if (!checker.hasLocationPermission()) {
+                    checker.requestLocationPermission();
                 }
-                if (!checker.hasPermission()) {
-                    checker.requestPermission();
-                } else {
-                    if (!checker.isInternetAvailable() || !checker.isGpsAvailable()) {
-                        String title = "Offline Mode";
-                        String message = "You have been brought to offline mode because " +
-                                "your device either has no internet connection or its location is unavailable";
-                        AlertBuilder alert = new AlertBuilder(this, message, title);
-                        alert.showDialog();
-                    } else {
-                        goOnline();
-                    }
+
+                if (!checker.hasNetworkStatePermission()) {
+                    checker.requestNetworkStatePermission();
                 }
             }
-        } else {
-            String reason = tmp.getStringExtra(Constants.PERSIST_INTO_MODE);
-            if (reason.equals(Constants.REASON_CLIENT_NOT_CONNECTED)) {
-                String title = "Offline Mode";
-                String message = "You have been brought to Offline Mode because " + reason + "" +
-                        "Would you like the application to automatically try to reconnect?";
-                DialogInterface.OnClickListener positive = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        final Handler handler = new Handler();
-                        Runnable recon = new Runnable() {
-                            @Override
-                            public void run() {
-                                if (!stopRecon) {
-                                    Log.w("RECON", "Reconnecting");
-                                    String id = prefs.getString(Constants.CLIENT_ID, null);
-                                    if (id == null) {
-                                        Log.e("NO ID", "Why didn't splash screen catch this?");
-                                    }
-                                    mqttManager = new MqttManager(id, OfflineMode.this);
-                                    Log.d("MQTT", "Trying to reconnect");
-                                    mqttManager.connect();
-                                    handler.postDelayed(this, 3 * 1000);
+            String reason;
+            /*
+             * We only show the user one of the problems. Each time they solve one of them
+             * (if possible), we show them the next one
+             */
+            if (!checker.isGpsAvailable()) {
+                reason = Constants.REASON_NO_GPS;
+            } else if (!checker.isInternetAvailable()) {
+                reason = Constants.REASON_NO_INTERNET;
+            } else {
+                reason = Constants.REASON_CLIENT_NOT_CONNECTED;
+            }
+            String title = "Offline Mode";
+            String message = "You have been brought to Offline Mode because " + reason + "" +
+                    "Would you like the application to automatically try to reconnect?";
+            DialogInterface.OnClickListener positive = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    /*
+                     * If the user opted for automatic reconnection,
+                     * We try to connect to the MQTT broker and get
+                     * an acknowledgement signal from the Desktop application
+                     */
+                    final Handler handler = new Handler();
+                    Runnable recon = new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!stopRecon) {
+                                Log.w("RECON", "Reconnecting");
+                                String id = prefs.getString(Constants.CLIENT_ID, null);
+                                if (id == null) {
+                                    stopRecon = true;
                                 }
+                                mqttManager = new MqttManager(id, OfflineMode.this);
+                                mqttManager.connect();
+                                handler.postDelayed(this, 3 * Constants.SECONDS);
                             }
-                        };
-                        recon.run();
-                    }
-                };
+                        }
+                    };
+                    recon.run();
+                }
+            };
 
-                DialogInterface.OnClickListener negative = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+            DialogInterface.OnClickListener negative = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
 
-                    }
-                };
-                AlertBuilder alert = new AlertBuilder(this, message, title, positive, negative);
-                alert.showDialog();
-            }
+                }
+            };
+            AlertBuilder alert = new AlertBuilder(this, message, title, positive, negative);
+            alert.showDialog();
         }
 
         initialise();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        /*
-         * Get the user's light and proximity protection settings
-         */
-        floorAvg = ((100f-prefs.getInt(Constants.LIGHT,50))/100f);
-        proxFloor = (prefs.getFloat(Constants.PROX, 0.25f));
-
-        mySensorManager = new MySensorManager(this);
-        mySensorManager.start();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        onResume();
     }
 
     private void initialise() {
@@ -196,12 +221,11 @@ public class OfflineMode extends AppCompatActivity implements
         txtProx = (TextView) findViewById(R.id.textProximity);
         txtLight = (TextView) findViewById(R.id.textLight);
         bulb = (ImageView) findViewById(R.id.bulb);
-        proxImg = (ImageView) findViewById(R.id.prox_img);
         /*
          * Initialise both light's and proximity's media players
          */
-        myLightPlayer = MediaPlayer.create(this,R.raw.offline_sound_warning);
-        myProxPlayer = MediaPlayer.create(this,R.raw.offline_sound_warning);
+        lightPlayer = new MyMediaPlayer(this, R.raw.offline_sound_warning, false);
+        proxPlayer = new MyMediaPlayer(this, R.raw.offline_sound_warning, false);
 
         /*
          * Initialise both light's and proximity's toasts (We first initialise them so we can later
@@ -248,6 +272,15 @@ public class OfflineMode extends AppCompatActivity implements
             }
         };
 
+        /*
+         * Get the user's light and proximity protection settings
+         */
+        floorAvg = ((100f-prefs.getInt(Constants.LIGHT,50))/100f);
+        proxFloor = (prefs.getFloat(Constants.PROX, 0.25f));
+
+        mySensorManager = new MySensorManager(this, SensorManager.SENSOR_DELAY_NORMAL);
+        System.out.println("(Offline Mode) Starting sensor manager");
+        mySensorManager.start();
     }
 
     @Override
@@ -297,8 +330,8 @@ public class OfflineMode extends AppCompatActivity implements
                         bulb.setImageResource(R.drawable.light_bulb_darker);
                     }
                 });
-                if (!myProxPlayer.isPlaying() && !myLightPlayer.isPlaying()) {
-                    myLightPlayer.start();
+                if (!proxPlayer.isPlaying() && !lightPlayer.isPlaying()) {
+                    lightPlayer.start(false);
                 }
             /*if light stay low for a period of time we calculate average again*/
                 schedulerDown.schedule(rDown, Constants.DOWN_TIME, TimeUnit.SECONDS);
@@ -323,16 +356,16 @@ public class OfflineMode extends AppCompatActivity implements
                 proxToastIsShowing = true;
             }
 
-            if (!myLightPlayer.isPlaying() && !myProxPlayer.isPlaying()) {
-                myProxPlayer.start();
+            if (!lightPlayer.isPlaying() && !proxPlayer.isPlaying()) {
+                proxPlayer.start(false);
             }
         } else {
             if (proxToastIsShowing) {
                 proxToast.cancel();
             }
 
-            if (myProxPlayer.isPlaying()) {
-                myProxPlayer.stop();
+            if (proxPlayer.isPlaying()) {
+                proxPlayer.stop();
             }
             proxToastIsShowing = false;
         }
@@ -398,19 +431,52 @@ public class OfflineMode extends AppCompatActivity implements
     }
 
     @Override
-    public void notifyCaller(boolean ack) {
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case Constants.PERMISSION_ACCESS_FINE_LOCATION_RESULT:
+                if (grantResults.length == 0 ||
+                        grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Online mode requires GPS to be available. Since you declined " +
+                            "the associated permission, you will not be able to use that feature.", Toast.LENGTH_LONG);
+                    shouldRequestPermissions = false;
+                }
+                break;
+            case Constants.PERMISSION_ACCESS_NETWORK_STATE_RESULT:
+                if (grantResults.length == 0 ||
+                        grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "For automatic reconnection to the server, the application " +
+                            "needs to be able to access your network state. Since you declined " +
+                            "the associated permission, you will not be able to use that feature", Toast.LENGTH_LONG);
+                    shouldRequestPermissions = false;
+                }
+        }
+    }
+
+    @Override
+    public void notifyCaller(boolean ack, Integer interval) {
         Log.d("MQTT", "Caller notified: " + ack);
         if (ack) {
             // This means that both the broker and the client
             // are online. If the user has chosen online mode as
-            // the preferred mode of operation, we start the
-            // corresponding activity
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    goOnline();
+            // the preferred mode of operation and they have
+            // enabled GPS and an active internet connection, we go online.
+            // Otherwise, we notify them about the problem
+            OnlineAvailabilityChecker checker = new OnlineAvailabilityChecker(this);
+            checker.start();
+            try {
+                checker.join();
+            } catch (InterruptedException ie) {
+                ie.printStackTrace();
+            }
+            if (!checker.isGpsAvailable()) {
+                if (!gpsAlert.isShowing()) {
+                    gpsAlert.showDialog();
                 }
-            });
+            } else if (!checker.isInternetAvailable()) {
+                if (!internetAlert.isShowing()) {
+                    internetAlert.showDialog();
+                }
+            }
 
         }
     }
@@ -428,15 +494,11 @@ public class OfflineMode extends AppCompatActivity implements
         /*
          * Stop the warnings
          */
-        if (myLightPlayer != null) {
-            if (myLightPlayer.isPlaying()) {
-                myLightPlayer.stop();
-            }
+        if (lightPlayer != null) {
+            lightPlayer.stop();
         }
-        if (myProxPlayer != null) {
-            if (myProxPlayer.isPlaying()) {
-                myProxPlayer.stop();
-            }
+        if (proxPlayer != null) {
+            proxPlayer.stop();
         }
         if (proxToastIsShowing) {
             if (proxToast != null) {
@@ -449,14 +511,16 @@ public class OfflineMode extends AppCompatActivity implements
             }
         }
         if (mySensorManager != null) {
-            Log.w("SENSOR", "Stopping sensor manager");
             mySensorManager.unregisterListeners();
-            mySensorManager.interrupt();
             mySensorManager = null;
         }
-
+        if (gpsAlert != null) {
+            gpsAlert.dismiss();
+        }
+        if (internetAlert != null) {
+            internetAlert.dismiss();
+        }
         this.stopRecon = true;
-        Log.w("OFFLINE MODE", "OFFLINE MODE STOPPING!!!!!!!!!!!!!!");
     }
 
     public void exit() {
@@ -465,6 +529,7 @@ public class OfflineMode extends AppCompatActivity implements
     }
 
     private void goOnline() {
+        System.out.println("Starting online mode");
         stop();
         finish();
 

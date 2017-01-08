@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.project.GPS.GpsManager;
 import com.project.HelpClasses.AlertBuilder;
 import com.project.HelpClasses.Constants;
+import com.project.HelpClasses.MyMediaPlayer;
 import com.project.MQTT.MqttConnectionCallback;
 import com.project.MQTT.MqttManager;
 import com.project.sensors.MySensorManager;
@@ -35,19 +36,26 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import static java.security.AccessController.getContext;
+
+/**
+ * Activity that warns the user about imminent danger by
+ * sending the device's sensor's data to a desktop application
+ * which notifies the client whether it should ring out a
+ * warning signal, a danger signal or to stop any signals in progress
+ */
 public class OnlineMode extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MqttConnectionCallback, SensorCallback {
 
     private TextView statusText;
     private MqttManager mqttManager;
     private GpsManager gpsManager;
-    private SharedPreferences prefs;
     private String clientId;
 
     MySensorManager mySensorManager;
 
-    private MediaPlayer warningPlayer;
-    private MediaPlayer dangerPlayer;
+    private MyMediaPlayer warningPlayer;
+    private MyMediaPlayer dangerPlayer;
     private Toast warningToast;
     private Toast dangerToast;
 
@@ -60,28 +68,24 @@ public class OnlineMode extends AppCompatActivity
 
     }
 
+
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
         if (clientId != null) {
             mqttManager = new MqttManager(clientId, this);
         } else {
             Log.e("NO ID SAVED", "There is no saved ID on this device. Why didn't splash screen catch that?");
         }
 
+        /*
+         * If we cannot connect to the MQTT broker, the application
+         * goes into offline mode and notifies the user about the problem
+         */
         if (!mqttManager.connect()) {
             goOffline(Constants.REASON_CLIENT_NOT_CONNECTED);
         }
-
-        mySensorManager = new MySensorManager(this);
     }
-
-    /*@Override
-    public void onStart() {
-        super.onStart();
-        onResume();
-
-    }*/
 
     private void initialise() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -97,13 +101,10 @@ public class OnlineMode extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        prefs = getSharedPreferences(Constants.PREFS, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(Constants.PREFS, MODE_PRIVATE);
 
-        Intent tmp = getIntent();
-        if (!tmp.hasExtra(Constants.PERSIST_INTO_MODE)) {
-            if (prefs.getInt(Constants.PREFERRED_MODE, Constants.MODE_ONLINE) != Constants.MODE_ONLINE) {
-                goOffline("");
-            }
+        if (prefs.getInt(Constants.PREFERRED_MODE, Constants.MODE_ONLINE) != Constants.MODE_ONLINE) {
+            goOffline("");
         }
 
         statusText = (TextView) findViewById(R.id.online_status_text_view);
@@ -112,8 +113,8 @@ public class OnlineMode extends AppCompatActivity
         gpsManager.start();
         clientId = prefs.getString(Constants.CLIENT_ID, null);
 
-        warningPlayer = MediaPlayer.create(this, R.raw.online_sound_warning);
-        dangerPlayer = MediaPlayer.create(this, R.raw.online_sound_danger);
+        warningPlayer = new MyMediaPlayer(this, R.raw.online_sound_warning, true);
+        dangerPlayer = new MyMediaPlayer(this, R.raw.online_sound_danger, true);
 
         Animation anim = new AlphaAnimation(1.0f, 0.3f);
         anim.setRepeatMode(Animation.REVERSE);
@@ -134,8 +135,12 @@ public class OnlineMode extends AppCompatActivity
         return id + "/" + lat + "/" + lng + "/" + light + "/" + prox;
     }
 
+    /*
+     * The mqttManager will call this function after 3 seconds, passing
+     * the desktop application's response (if any)
+     */
     @Override
-    public void notifyCaller(final boolean ack) {
+    public void notifyCaller(final boolean ack, final Integer interval) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -146,7 +151,7 @@ public class OnlineMode extends AppCompatActivity
                     goOffline(Constants.REASON_CLIENT_NOT_CONNECTED);
                 } else {
                     Log.d("MQTT", "Finalising connection");
-                    mqttManager.finaliseConnection();
+                    mySensorManager = new MySensorManager(OnlineMode.this, interval);
                     mySensorManager.start();
                 }
             }
@@ -155,49 +160,50 @@ public class OnlineMode extends AppCompatActivity
 
     @Override
     public void soundWarning() {
-        if (warningPlayer == null) {
-            warningPlayer = MediaPlayer.create(this, R.raw.online_sound_warning);
+        if (warningPlayer != null) {
+            warningPlayer.start(true);
         }
-        if (!warningPlayer.isPlaying()) {
-            warningPlayer.start();
-        }
-        if (warningToast != null) {
-            warningToast = Toast.makeText(this, "Warning! Warning! Warning!", Toast.LENGTH_SHORT);
-            warningToast.show();
-        }
+        warningToast = Toast.makeText(this, "Warning! Warning! Warning!", Toast.LENGTH_SHORT);
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), "Warning!", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
     public void soundDanger() {
-        if (dangerPlayer == null) {
-            dangerPlayer = MediaPlayer.create(this, R.raw.online_sound_danger);
+        if (dangerPlayer != null) {
+            if (warningPlayer != null) {
+                warningPlayer.stopImmediately();
+            }
+            dangerPlayer.start(true);
         }
-        if (!dangerPlayer.isPlaying()) {
-            dangerPlayer.start();
-        }
-        if (dangerToast != null) {
-            dangerToast = Toast.makeText(this, "Danger! Danger! Danger!", Toast.LENGTH_SHORT);
-            dangerToast.show();
-        }
+        dangerToast = Toast.makeText(this, "Danger! Danger! Danger!", Toast.LENGTH_SHORT);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                dangerToast.show();
+            }
+        });
     }
 
     @Override
     public void stopSounds() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                statusText.clearAnimation();
-            }
-        });
+        if (statusText != null) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    statusText.clearAnimation();
+                }
+            });
+        }
         if (warningPlayer != null) {
-            if (warningPlayer.isPlaying()) {
-                warningPlayer.stop();
-            }
+            warningPlayer.stop();
         }
         if (dangerPlayer != null) {
-            if (dangerPlayer.isPlaying()) {
-                dangerPlayer.stop();
-            }
+            dangerPlayer.stop();
         }
         if (warningToast != null) {
             warningToast.cancel();
@@ -218,7 +224,7 @@ public class OnlineMode extends AppCompatActivity
             if (drawer.isDrawerOpen(GravityCompat.START)) {
                 drawer.closeDrawer(GravityCompat.START);
             } else {
-                String mes = "Are you sure you would like to exit the application?";     /*Asking the user*/
+                String mes = "Are you sure you would like to exit the application?";
                 String title = "Application Exit";
                 DialogInterface.OnClickListener positive = new DialogInterface.OnClickListener() {
                     @Override
@@ -241,10 +247,24 @@ public class OnlineMode extends AppCompatActivity
 
     public void stop() {
         stopSounds();
+        if (gpsManager != null) {
+            if (gpsManager.isConnected()) {
+                gpsManager.stopLocationUpdates();
+            }
+        }
         if (mySensorManager != null) {
             mySensorManager.unregisterListeners();
             mySensorManager.interrupt();
             mySensorManager = null;
+        }
+        if (warningPlayer != null) {
+            warningPlayer.destroy();
+        }
+        if (dangerPlayer != null) {
+            dangerPlayer.destroy();
+        }
+        if (mySensorManager != null) {
+            mySensorManager.unregisterListeners();
         }
     }
 
@@ -282,7 +302,6 @@ public class OnlineMode extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.

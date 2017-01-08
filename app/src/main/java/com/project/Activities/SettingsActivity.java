@@ -24,23 +24,26 @@ import com.project.GPS.OnlineAvailabilityChecker;
 import com.project.HelpClasses.AlertBuilder;
 import com.project.HelpClasses.Constants;
 
+/**
+ * Activity where the user can choose application settings
+ */
 public class SettingsActivity extends AppCompatActivity {
-    Switch modeSwitch;
-    Spinner lightSettings;
-    SeekBar proximitySettings;
-    TextView maxRange;
-    TextView progressTv;
-    Button save;
-    EditText connUrlText;
-    EditText portText;
+    private Switch modeSwitch;
+    private Spinner lightSettings;
+    private SeekBar proximitySettings;
+    private TextView maxRange;
+    private TextView progressTv;
+    private Button save;
+    private EditText connUrlText;
+    private EditText portText;
 
-    int startedFrom;
+    private int startedFrom;
 
-    SharedPreferences prefs;
-    SharedPreferences.Editor editor;
+    private SharedPreferences prefs;
+    private SharedPreferences.Editor editor;
 
-    int progressNow;
-    float max;
+    private int progressNow;
+    private float max;
 
 
 
@@ -146,8 +149,8 @@ public class SettingsActivity extends AppCompatActivity {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    if (!checker.hasPermission()) {
-                        checker.requestPermission();
+                    if (!checker.hasLocationPermission()) {
+                        checker.requestLocationPermission();
                         modeSwitch.setChecked(false);
                     } else {
                         if (!checker.isInternetAvailable()) {

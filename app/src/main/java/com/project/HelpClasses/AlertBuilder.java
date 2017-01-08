@@ -7,7 +7,6 @@ import android.support.v7.app.AlertDialog;
 /*
  * Simple Alert Builder class for easier Alert Dialog building
  */
-
 public class AlertBuilder {
     private Context context;
     private String message;
@@ -16,6 +15,7 @@ public class AlertBuilder {
     private String positiveText;
     private DialogInterface.OnClickListener negative;
     private String negativeText;
+    private AlertDialog dialog;
 
     public AlertBuilder (Context context, String message, String title, DialogInterface.OnClickListener positive,
                          DialogInterface.OnClickListener negative) {
@@ -46,7 +46,7 @@ public class AlertBuilder {
     public void showDialog() {
 
         if (positive == null || negative == null) {
-            new AlertDialog.Builder(context)
+            dialog = new AlertDialog.Builder(context)
                     .setTitle(title)
                     .setMessage(message)
                     .setIcon(android.R.drawable.stat_sys_warning)
@@ -54,7 +54,7 @@ public class AlertBuilder {
                     .setCancelable(false)
                     .show();
         } else if (this.positiveText != null && this.negativeText != null){
-            new AlertDialog.Builder(context)
+            dialog = new AlertDialog.Builder(context)
                     .setTitle(title)
                     .setMessage(message)
                     .setIcon(android.R.drawable.stat_sys_warning)
@@ -63,7 +63,7 @@ public class AlertBuilder {
                     .setCancelable(false)
                     .show();
         } else {
-            new AlertDialog.Builder(context)
+            dialog = new AlertDialog.Builder(context)
                     .setTitle(title)
                     .setMessage(message)
                     .setIcon(android.R.drawable.stat_sys_warning)
@@ -71,6 +71,19 @@ public class AlertBuilder {
                     .setPositiveButton(android.R.string.yes, positive)
                     .setCancelable(false)
                     .show();
+        }
+    }
+
+    public boolean isShowing() {
+        if (this.dialog != null) {
+            return this.dialog.isShowing();
+        }
+        return false;
+    }
+
+    public void dismiss() {
+        if (this.dialog != null) {
+            this.dialog.dismiss();
         }
     }
 }
