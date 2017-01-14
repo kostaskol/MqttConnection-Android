@@ -2,43 +2,48 @@
 __________________________________________________________________________________
 	+  <h2> Index: </h2>
 		+  <h3> [Topics](#topics) </h3>
-		+  <h3> [Message Format](#message_format) </h3>
+		    +  <h3> [Message Format](#message_format) </h3>
 		+  <h3> [Classes](#classes) </h3>
-		+  <h3> [Class Methods](#methods) </h3>
+		    +  <h3> [Class Methods](#methods) </h3>
 		+  <h3> [Usage Screenshots](#ss) </h3>
 		+  <h3> [Installation](#install) </h3>
+		+  <h3> [Algorithm](#algorithm) </h3>
 	
 
 __________________________________________________________________________________
 
 + <h2> <a name="topics">Topics</a> </h2>
-	+ **log:** Not being used by the android client
-	+ **connections:** Everything that has to do with a connection.
-	+ **connections/newConnections:** When a new android client connects, they notify the desktop client by publishing to this topic
-	+ **connections/connected:** Already connected android clients pulish to this + their UUID topic.
-	+ **connections/connected/\<Client UUID\>:** Already connected android client.
-	+ **connections/connected/\<Client UUID\>/**
-		+ **warning:** The desktop client publishes the warning messages to this topic.
-		+ **danger:** The desktop client publishes the danger messages to this topic.
-		+ **stopSounds:** The desktop client publishes the stop all sounds messages to this topic.
-		+ **acknowledged:** The desktop client publishes to this topic of a specific UUID to inform the android client that the desktop client is online.
-	+ **connections/requestAck:** Before an android client goes into Online Mode, they request an acknowledgement.
-	+ **mainClient/disconnected:**  If the desktop application disconnects ungracefully (it always does), all of the connected clients are notified and go into Offline Mode.
-	<p align="center">
-		<img src="https://lh3.googleusercontent.com/EMTDe2A2bCl9MuYJKZhCLX_tX7UdKtdf8fYdxdcuCFidDoLNWDPSGSRl4oVtERlpl-79DWBNPMcfacocgttfsDVU6azZSdBP_WkuWFD2jJ2F8gW6waPMZqLLN0g3wm8OvVqph2EdKa19BJYjsqYHRyAvq9kLpfUcwLtEaH2fTq80pnvMS5q1wzfTGcRKl0gtI-GgZoyINp9rIRpnKFovbLAk6h2PP1O4wwLJT99YfX0txHF1OFchctcVTubwk4zjAbNMjcq3cL0Ad6cVlIBt_71riQmHjeu2gCpdY2uXs68ZlwlUXNOzh9X7C2BwyIrDisLDZmPhtLoNUSl5eCoe_j5sL4CZAVWomGBtwjofZsbiA3fe1D4qyizQ1eRNseiFzk5f9Rcaoa3z4FiseBP9KKZbIyibwM7xOWOv-6B3U-l-9cg8B4FxBR1hLd7QfB9xZuQ80dU0NywqltCgg1tsRDz2-pbNJ1aL095OfSZeZwjX290c1as0ZkAkJZhaa1_eKt1ZajAqfI2CZdJIfhzdQIbiKmLn-NgJ6fQ4Mh6Ve1OXOlOXtiuRcmVbKGWFeoQXeBHu_o1KupHzSX5Xff5GLd_zgDs7cP_fIN0VhO6HFdMsm4GmYExz=w1063-h501-no" />
-	</p>
-	 
-	+ <h2> <a name="message_format">Message format by topic:</a> </h2>
-		+ **log** -> No standard format
-		+ **connections/newConnections** -> \<"Client's UUID"\>
-		+ **connections/connected/\<Client's UUID\>** -> \<"Client UUID"/"latitude"/"longitude"/"light sensor value"/"proximity sensor value">
-		+ **connections/connected/\<Client's UUID\>/:**
-			+   warning -> "warning"
-			+   danger -> "danger"
-			+   stopSounds -> "stop warning"
-			+   acknowledged -> <The frequency at which the android client should send data to *the* desktop client
-		+  **connections/requestAck** -> \<"Client UUID"\>
-		+  **mainClient/disconnected** -> "disconnecting"
+
+	|Topic                                          |Subtopics                          |Usage                              |
+    |:----------------------------------------------|:---------------------------------:|:----------------------------------|
+    |log                                            |-None-                             |Operation messages from the desktop client are sent here for better readability
+    |connections                                    |-None-                             |Everything that has to do with a connection. 
+    |connections/newConnections                     |-None-                             |When a new android client connects, they notify the desktop client by publishing a message containing their UUID to this topic                |
+    |connections/connected/                         |-None-                             |Already connected android clients publish to this + their UUID topic|
+    |connections/connected/\<Client's UUID          |-None-                             |Already connected android clients publish to this topic.
+    |                                               |warning                            |The desktop client publishes the warning messages to this topic                          |
+    |                                               |danger                             |The desktop client publishes the danger messages to this topic                           |
+    |                                               |stopSounds                         |The desktop client publishes the stop all sounds messages to this topic                       |
+    |                                               |acknowledged                       |The client publishes to this topic of a specific UUID to inform the android client that the desktop client is online|
+    |connections/requestAck                         |-None-                             |Before an android client goes into Online Mode, they request and acknowledgement message from the desktop client (ensuring that it is running)                |
+    |mainClient/disconnected                        |-None-                             |If the desktop application disconnects ungracefully (it always does), all of the connected clients are notified and go into Offline Mode                      |
+    <p align="center">
+        <img src="https://lh3.googleusercontent.com/EMTDe2A2bCl9MuYJKZhCLX_tX7UdKtdf8fYdxdcuCFidDoLNWDPSGSRl4oVtERlpl-79DWBNPMcfacocgttfsDVU6azZSdBP_WkuWFD2jJ2F8gW6waPMZqLLN0g3wm8OvVqph2EdKa19BJYjsqYHRyAvq9kLpfUcwLtEaH2fTq80pnvMS5q1wzfTGcRKl0gtI-GgZoyINp9rIRpnKFovbLAk6h2PP1O4wwLJT99YfX0txHF1OFchctcVTubwk4zjAbNMjcq3cL0Ad6cVlIBt_71riQmHjeu2gCpdY2uXs68ZlwlUXNOzh9X7C2BwyIrDisLDZmPhtLoNUSl5eCoe_j5sL4CZAVWomGBtwjofZsbiA3fe1D4qyizQ1eRNseiFzk5f9Rcaoa3z4FiseBP9KKZbIyibwM7xOWOv-6B3U-l-9cg8B4FxBR1hLd7QfB9xZuQ80dU0NywqltCgg1tsRDz2-pbNJ1aL095OfSZeZwjX290c1as0ZkAkJZhaa1_eKt1ZajAqfI2CZdJIfhzdQIbiKmLn-NgJ6fQ4Mh6Ve1OXOlOXtiuRcmVbKGWFeoQXeBHu_o1KupHzSX5Xff5GLd_zgDs7cP_fIN0VhO6HFdMsm4GmYExz=w1063-h501-no"/>
+    </P>
+    + <h2><a name="message_format">**Message format:**</a> </h2>
+    
+        |Topic                                          |Subtopics                          |Message format                     |
+        |:----------------------------------------------|:---------------------------------:|:----------------------------------|
+        |log                                            |-None-                             |\<"Log message type" - "message"\> |
+        |connections/newConnections                     |-None-                             |\<"Client's UUID"\>                |
+        |connections/connected/\<Client's UUID>         |-None-                             |\<"Client UUID"/"latitude"/"longitude"/"light sensor value"/"proximity sensor value">|
+        |                                               |warning                            |"warning"                          |
+        |                                               |danger                             |"danger"                           |
+        |                                               |stopSounds                         |"stop warning"                     |
+        |                                               |acknowledged                       |\<The frequency at which the android client should contact the desktop client\>|
+        |connections/requestAck                         |-None-                             |\<"Client's UUID"\>                |
+        |mainClient/disconnected                        |-None-                             |"disconnecting"                    |
+
 	+ <h2> <a name="classes"> __Classes__ :</a> </h2>
 		<p align="center">
 			<img src="https://lh3.googleusercontent.com/b-KJz-5ENFFol01knQUWUfueHWCdnVFrG1L2Lf04NZ_LDoNiPornBzh_a67oTlsxvOZzuJqT8FNfzA6QdKGz7KhDvUOW2nGfvYk_MK_LSRj8fJ_fn5pBcJ1b08_rBEI_eFcmgLNsNN7gPaw7Ekak_uate2O83RJ8Cltq-cZHU8JpYL8_06ettTzBiflPgywgPBKB9hVIe3rSCBNk_zfz18FIhIH9kcO6pVjp0JdbrP2dDePX_jGaivEisTGKPtF6NqKYXRO4eneHBcx3t1N5x57fFiXGJw8VyMRcSnHGoNekPWIBUEnNYNP-UlwdrleGvd9sQnfVWkejpKlF1P-oFGH5CY4H91lL9j3ZdUIbNIz8cw4R0gUex2M0YBnQvcX33SSumL6VX1fcSSb9ZKuXxqTLwD47FJnQu4FvNaQ45kM9z6rmrItfliPAqF2IMluVrmb_8dvrBjtdwOqPAFoI17p3JUL0nGWhrcHW8QgLngD8NQfBqLsj-NFm5p0-8tJsXqyFnYb-2TFmVKZ2ypYlHizvDoMk42qy2N4KFnuNKBuN5YCiNmc3NSU7udYQHDBM8F4ShX2Hl0gGNqqcvBpR97PZ7SE9yI6cEhYY-fkMCF-Xt1gOjjLD=w971-h546-no"
@@ -162,10 +167,20 @@ ________________________________________________________________________________
                 + Note: Offline mode's settings have no effect when the application 
                 is in Online Mode
         
-        + <h2> <a name="install">Installation</a> </h2>
+    + <h2> <a name="install">Installation</a> </h2>
         1. Copy the following file:  
         "build/outputs/apk/app-debug.apk" to your android device.
         2. In your android device:  
         Go to Settings -> Security -> Allow installation of apps from unknown sources
         3. Install the application using the app-debug.apk file
-          
+    
+    + <h2><a name="algorithm">**Algorithm**</a></h2>
+        1. A threshold and a current lighting value are supplied to the algorithm.
+        2. For the first set amount of times we receive a lighting value, we add it to a sum and do nothing else.
+        3. When we have enough values, we calculate the user's current environment average
+        4. We calculate the actual threshold ((100 - threshold) / 100)
+        5. If the lighting value is greater than the user's current average + the actual threshold, we recalculate the average
+        6. If the lighting value is less than the user's current average - the actual threshold, we warn them about a possibility of danger
+        7. If the lighting value is within these two limits, the user is persumed in a safe state
+
+This is the end of the android application's README file. For information regarding the desktop client, please see the relative repository [here](https://anapgit.scanlab.gr/1200058-1200066/phase2-Desktop)
