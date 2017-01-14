@@ -123,7 +123,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
         lightSettings.setSelection(position);
 
-        proximitySettings.setProgress(prefs.getInt(Constants.LIGHT, 0));
+        proximitySettings.setProgress((int) prefs.getFloat(Constants.PROX, 0));
 
         connUrlText = (EditText) findViewById(R.id.settings_online_conn_url);
 
@@ -227,7 +227,10 @@ public class SettingsActivity extends AppCompatActivity {
                 }
 
                 editor.putInt(Constants.LIGHT,Integer.parseInt(tmp));
-                editor.putFloat(Constants.PROX, progressNow);
+                if (progressNow == 0) {
+                    progressNow = 100;
+                }
+                editor.putFloat(Constants.PROX, 100 / progressNow);
 
                 editor.putString(Constants.MQTT_CONNECTION_URL, connUrlText.getText().toString());
                 editor.putString(Constants.MQTT_PORT, portText.getText().toString());

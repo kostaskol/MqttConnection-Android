@@ -67,8 +67,10 @@ public class MySensorManager extends Thread implements SensorEventListener {
         Runnable runn = new Runnable() {
             @Override
             public void run() {
-                callback.onSensorValuesChanged(lightVal, proxVal);
-                handler.postDelayed(this, interval);
+                if (callback != null) {
+                    callback.onSensorValuesChanged(lightVal, proxVal);
+                    handler.postDelayed(this, interval);
+                }
             }
         };
         runn.run();
@@ -94,6 +96,10 @@ public class MySensorManager extends Thread implements SensorEventListener {
         } else if (sensor.getType() == Sensor.TYPE_PROXIMITY) {
             this.proxVal = String.valueOf(event.values[0]);
         }
+    }
+
+    public void removeCallback() {
+        this.callback = null;
     }
 
     @Override
