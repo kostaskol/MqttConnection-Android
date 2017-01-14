@@ -42,14 +42,14 @@ ___________________________________________________________________
 			+ **Managers:** They simplify or automate an operation
 			+ **Utilities:** They provide some useful methods
 			+ **Activities:** The provide the UI of the application
-		+ A description of all the classes can also be found at the beginning of the corresponding file
-			|Class			 			|Package	|Class Type		|Description|
+		+ A description of all the classes can also be found at the beginning of the corresponding file  
+		
+			|Class Name		 			|Package	|Class Type		|Description|
 			|---------------------------|-----------|---------------|-----------|
 			|OfflineMode	 			|Activities	|Activity		|Provides the full application usage when the device **_is not_** connected to the MQTT broker
 			|OnlineMode		 			|Activities |Activity		|Provides the full application usage when the device **_is_** connected to the MQTT broker
 			|SettingsActivity			|Activities |Activity		|Allows the user to change the application's settings
-			|SplashScreen				|Activities |Activity		|Makes the necessary checks about the availability of an internet connection or a GPS signal and starts an
-			activity accordingly
+			|SplashScreen				|Activities |Activity		|Makes the necessary checks about the availability of an internet connection or a GPS signal and starts an activity accordingly
 			|GpsManager					|GPS		|Manager		|Utilises Google Play Services to automate the acquisition of the user's current location.
 			|OnlineAvailabilityChecker	|GPS		|Utility		|Provides functions that check the availability of internet/GPS and the user permissions
 			|AlertBuilder				|HelpClasses|Utility		|Easy construction of alert dialogs
@@ -57,6 +57,7 @@ ___________________________________________________________________
 			|MyMediaPlayer				|HelpClasses|Utility		|Allows us to easily play sound files (offline_sound_warning.wav - online_sound_danger.wav - online_sound_warning.wav)
 			|MqttManager				|MQTT		|Manager		|Handles any and all of the MQTT communications
 			|MySensorManager			|sensors	|Manager		|Handles all of the sensor value acquisition
+
  		+ A brief description of the interfaces:
  	
  			|Interface				|Package		|Description|
@@ -64,7 +65,8 @@ ___________________________________________________________________
 			|MqttConnectionCallback	|MQTT			|Provides a way to notify an activity about any messages the desktop application publishes
 			|SensorCallback			|sensors		|Provides a way for a MySensorManager object to periodically send sensor value data to the caller activity
 
-		+ A brief description of every class's methods:
+		+ <a name="methods">A brief description of every class's methods:</a>  
+		
 			|Class Name				|Method							|Description|
 			|-----------------------|-------------------------------|-----------|
 			|OfflineMode			|@Over onCreate					|Initialises the activity and checks (and notifies the user) whether the application was forced into offline mode (i.e. There is no internet connection)
