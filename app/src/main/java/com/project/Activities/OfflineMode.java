@@ -275,7 +275,7 @@ public class OfflineMode extends AppCompatActivity implements
         /*
          * Get the user's light and proximity protection settings
          */
-        floorAvg = ((100f-prefs.getInt(Constants.LIGHT,50))/100f);
+        floorAvg = ((100f - prefs.getInt(Constants.LIGHT, 50)) / 100f);
         proxFloor = (prefs.getFloat(Constants.PROX, 0.25f));
 
         mySensorManager = new MySensorManager(this, SensorManager.SENSOR_DELAY_NORMAL);
@@ -349,8 +349,10 @@ public class OfflineMode extends AppCompatActivity implements
             }
         }
 
+        System.out.println("Prox floor is :" + proxFloor);
         cm = Float.valueOf(proxVal);
         if (cm <= proxFloor) {       /*Warning*/
+            System.out.println("Ringing for proximity");
             if (!lightToastIsShowing && !proxToastIsShowing) {
                 proxToast.show();
                 proxToastIsShowing = true;
@@ -515,6 +517,8 @@ public class OfflineMode extends AppCompatActivity implements
         }
         if (mySensorManager != null) {
             mySensorManager.unregisterListeners();
+            mySensorManager.interrupt();
+            mySensorManager.removeCallback();
             mySensorManager = null;
         }
         if (gpsAlert != null) {
