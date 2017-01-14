@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="org.eclipse.paho.android.service-1.0.2">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/libs/org.eclipse.paho.android.service-1.0.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/home/kostas/StudioProjects/phase2-Android/libs/org.eclipse.paho.android.service-1.0.2.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

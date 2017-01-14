@@ -55,7 +55,6 @@ public class Constants {
     public static final String TOPIC_STOP_WARNING = "/stopSounds";
     public static String CLIENT_TOPIC;
     public static final String LAST_WILL_TOPIC = "mainClient/disconnected";
-    public static final String MAIN_CLIENT_DISCONNECTING = "disconnecting";
 
     /*
      * Mqtt Message Constants
@@ -63,6 +62,8 @@ public class Constants {
     public static final String MESSAGE_WARNING = "warning";
     public static final String MESSAGE_DANGER = "danger";
     public static final String MESSAGE_STOP_WARNING = "stop warning";
+    public static final String MAIN_CLIENT_DISCONNECTING = "disconnecting";
+
 
     /*
      * Forced Offline Mode reasons

@@ -55,7 +55,6 @@ public class MySensorManager extends Thread implements SensorEventListener {
     }
 
     private void runAtInterval(final Integer interval) {
-        System.out.println("Interval is: " + interval);
         Looper.prepare();
          /*
          * Notify the caller activity each time the sensor values have changed.

@@ -465,18 +465,21 @@ public class OfflineMode extends AppCompatActivity implements
             checker.start();
             try {
                 checker.join();
+                if (!checker.isGpsAvailable()) {
+                    if (!gpsAlert.isShowing()) {
+                        gpsAlert.showDialog();
+                    }
+                } else if (!checker.isInternetAvailable()) {
+                    if (!internetAlert.isShowing()) {
+                        internetAlert.showDialog();
+                    }
+                } else {
+                    goOnline();
+                }
             } catch (InterruptedException ie) {
                 ie.printStackTrace();
             }
-            if (!checker.isGpsAvailable()) {
-                if (!gpsAlert.isShowing()) {
-                    gpsAlert.showDialog();
-                }
-            } else if (!checker.isInternetAvailable()) {
-                if (!internetAlert.isShowing()) {
-                    internetAlert.showDialog();
-                }
-            }
+
 
         }
     }
