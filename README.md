@@ -39,7 +39,7 @@ ________________________________________________________________________________
 			+   acknowledged -> <The frequency at which the android client should send data to *the* desktop client
 		+  **connections/requestAck** -> \<"Client UUID"\>
 		+  **mainClient/disconnected** -> "disconnecting"
-	+ <h2> <a name="Classes"> **Classes** :</a> </h2>
+	+ <h2> <a name="classes"> __Classes__ :</a> </h2>
 		<p align="center">
 			<img src="https://lh3.googleusercontent.com/b-KJz-5ENFFol01knQUWUfueHWCdnVFrG1L2Lf04NZ_LDoNiPornBzh_a67oTlsxvOZzuJqT8FNfzA6QdKGz7KhDvUOW2nGfvYk_MK_LSRj8fJ_fn5pBcJ1b08_rBEI_eFcmgLNsNN7gPaw7Ekak_uate2O83RJ8Cltq-cZHU8JpYL8_06ettTzBiflPgywgPBKB9hVIe3rSCBNk_zfz18FIhIH9kcO6pVjp0JdbrP2dDePX_jGaivEisTGKPtF6NqKYXRO4eneHBcx3t1N5x57fFiXGJw8VyMRcSnHGoNekPWIBUEnNYNP-UlwdrleGvd9sQnfVWkejpKlF1P-oFGH5CY4H91lL9j3ZdUIbNIz8cw4R0gUex2M0YBnQvcX33SSumL6VX1fcSSb9ZKuXxqTLwD47FJnQu4FvNaQ45kM9z6rmrItfliPAqF2IMluVrmb_8dvrBjtdwOqPAFoI17p3JUL0nGWhrcHW8QgLngD8NQfBqLsj-NFm5p0-8tJsXqyFnYb-2TFmVKZ2ypYlHizvDoMk42qy2N4KFnuNKBuN5YCiNmc3NSU7udYQHDBM8F4ShX2Hl0gGNqqcvBpR97PZ7SE9yI6cEhYY-fkMCF-Xt1gOjjLD=w971-h546-no"
 		</p>
@@ -135,6 +135,7 @@ ________________________________________________________________________________
                     <p align="center">
                     	<img src="https://lh3.googleusercontent.com/-CbiQ4CXkC_mlFB_8ClJVpT1EITv9dG1N6wh9idA_-GHEmZlu-7DBve_qfv-qP0QVKAVo9X9_caHTmDzfSiTTbJhvfelhSY1ldLLW8-Fq7AMvJSxtq0PIHA_B2VAKwnPuZz_lY_eVtOl8BguJVDaSFr_pY_3BfmuhPtw_kfKhdhsKGFcgiezwDTxHp2cqmxZRavDI6-SfHdEGvS8n5clR1LDQkGDkdPT_rZ1YgLpipQ7MO9Vex_ukn0d2IU9HxrezdLaVbp-1PTI1f8Aj-Mcj-aaUTH2hvUDhZ8Tz_jWsJPC-rxX2FmXNmXjBbmVayvr799jvcSWO7iB3FEw0XAXj9ESH8zPddZtxCbBRWXjOjje4DC3ahkoERv21xpAnea3P5qcS9k262PwhGoX8tH4mdOe_ZoqDzaIvvH5Q31BduA7gQmxhtDcN3h5M4fMGwnSne1m62wVPupbTo6NArjV4jI17dty8SUiO_2-ArxSgUQUylkrDyzQuapTKPrYyEiKtXOdmzuAy0Q7Xjdn7UA2y6K6zifRaMTI3dPP1KYCaYYfFH23Gybe_q96JUJoMy50hTmVvAqXzjx2tucX2SVi5hw01ol7QMsckqxOyo4IfzcHEAAAVFxh=w371-h659-no" />
                     </p>
+                    
                     + If a connection to the MQTT broker can be made
                     and the desktop client acknowledges us,
                     we remain in Online Mode. Otherwise, we go into
@@ -142,12 +143,12 @@ ________________________________________________________________________________
                     <p align="center">
                         <img src="https://lh3.googleusercontent.com/9qwihb9FcHzoCw5ObE7-xb4tXFMMx7A0kExAQFqr4XX3vlQNfOY3SRqhYbgOn6mMjB_0y9PrzoEz_KmY64uh26e8Ea340BlfYgtBLvPnc8nFsFycIkXRE03xm7xEcZlFFJXLlxD4AzatjasWYNOrVVjzzJvxgd_REmW_Uhj0f3Dd923i9iBrZJWaJ8fNHqesfAUgf-giavxhmUk50_BvlUcuzQzq_j9BOS_Y11CezZZCsboBiMCGgt9dVP7lGd10YWY2eoTcvHYCZZfIerLgdjEt3TSQ50V0HosT8XSuUuHRMQU0r6NJRevmYjPJTXg6S-PPJjKXwGZ6KsGtW1N93QNlNk-nn4rN4ZUqMPv-7oIvHU7UXCNrL5fvlcrDHRUuKk4wUK0a13O3K5jd8bUwsQnRKFqc3g-E98vyLIlg8ROQzhw7yb3-tYezlFHrG4-bQmnxbzTPM1SF8d8zB9J0C1OsEA5g9imC3L4bOP3uWL0Su7kL7yDBkMyWoJznv9-Rdt3TaQO6XXfZgAwXZzTCxa5aGpdXbZzcJD0IfDEQZPJfpTMcwMiG4cEdn2JdVLkYIx10FFdNwVVUNIHJscpLGJy0vX4XyqU2eUbVCtZVM5Q4ynocffPO=w371-h659-no" />
                     </p>
-                + **Offline Mode:**
-                    <li> Upon entering Offline Mode, the user will see
-                    the following screen
-                    <p align="center">
-                    	<img src="https://lh3.googleusercontent.com/dKqoQU0TSgu8SWuCEG3kvoSPE8P8lAHk9rSvRssrVdvfH2Czp_IsoNLkyXszH6W1e8dMcbPnrfW3DQJc6CBBPb-_iW9hsl-ssr9utAAvtcJHQiAT3T6MxI8bE1QRgwvHkiZBYa2YMxxweNe-6deqqKQAlMk4RP6Aa-EY4acrnc2RlXuYhyFf8QXQoFM49BNHnr1lXRejL1RfWhGOUf9yIAhsis4kPCa-YWRjpA_iauTKCtgSH5KOZ_n4u4mJncdD_KV0Uags6SGPVqkEqOYJAPpUuh4o3HfqF6l5M_AEtanyYPobHfgeefCR3kpperPx_WkTrAGY2OMXwI-xMgphdvdOaVvePrSLSt9g-9YbhV77Dh6JYIA2Zv4dn0MBw8rMv8VW5pa_uKCLYzy-L6ewfNZp6Y5O7fQO8K4HbCH04OI_x4ajlyUth50loZQsIDgK55lJrFqcTGGOn1xzTwNwf1ZBfVIvKAYaUHNk5xAitZMdjFYn06KVTc4Htaqr34z4ikWO2KIdsj3Tan6FBmh42TPXWbpK1GqQvIhvHy6DyfMtxf1kScA9EOb22lKyhlkOco374gkdvh3syNoBlN83q7fnDRV_dhZFwQSZeTyZz6-XZTXwZaMM=w371-h659-no" />
-                    </p></li>
+            + **Offline Mode:**
+                +Upon entering Offline Mode, the user will see
+                the following screen
+                <p align="center">
+                	<img src="https://lh3.googleusercontent.com/dKqoQU0TSgu8SWuCEG3kvoSPE8P8lAHk9rSvRssrVdvfH2Czp_IsoNLkyXszH6W1e8dMcbPnrfW3DQJc6CBBPb-_iW9hsl-ssr9utAAvtcJHQiAT3T6MxI8bE1QRgwvHkiZBYa2YMxxweNe-6deqqKQAlMk4RP6Aa-EY4acrnc2RlXuYhyFf8QXQoFM49BNHnr1lXRejL1RfWhGOUf9yIAhsis4kPCa-YWRjpA_iauTKCtgSH5KOZ_n4u4mJncdD_KV0Uags6SGPVqkEqOYJAPpUuh4o3HfqF6l5M_AEtanyYPobHfgeefCR3kpperPx_WkTrAGY2OMXwI-xMgphdvdOaVvePrSLSt9g-9YbhV77Dh6JYIA2Zv4dn0MBw8rMv8VW5pa_uKCLYzy-L6ewfNZp6Y5O7fQO8K4HbCH04OI_x4ajlyUth50loZQsIDgK55lJrFqcTGGOn1xzTwNwf1ZBfVIvKAYaUHNk5xAitZMdjFYn06KVTc4Htaqr34z4ikWO2KIdsj3Tan6FBmh42TPXWbpK1GqQvIhvHy6DyfMtxf1kScA9EOb22lKyhlkOco374gkdvh3syNoBlN83q7fnDRV_dhZFwQSZeTyZz6-XZTXwZaMM=w371-h659-no" />
+                </p>
                 + If, at any point, the user chooses to change the settings or
                 close the application, 
                 they can do so by using the navigation bar
