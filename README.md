@@ -130,18 +130,18 @@ ________________________________________________________________________________
              	<img src="https://lh3.googleusercontent.com/JdpRQY9SAcBluRdvsLBoBTdZwiDRAxqOX2D-yrlnKwIF6eSAt7EclSlvb5AJS-fEeWdGa_3gLRHXA2YTULUbRX0GyYfkaL28QE52u2aq3VZUd_LS38e729MAhA3M0VqyLR156zSajvHJUpSWtbz9J1EItOt628ruzhB9lAylzDYtuXWaCBD0deiwqv0S5K5scV9YMSTUp6vm0aIXcpTtjhP-SfSLbT2umCong8JbTa8Zg_o_ZDfGskRFtPfwr17caKDPIQXaq2YSj13hNhcjBKHm46mpmmlvjrllkeLIEP8N8OhCiSnXTRon0TY4M3oO2cbVpPSiEMfiN6oZ5-7TWDao4WHWtc6y6IPM2G_TUSDHVOJokc6RUrr7ybRZMEuYjC5veg2n7UHEZ_6DFXWt3gJIjqQHxixvFFmQ4fYIXh88DHNE7DBxo3Efc_vzcFOBoorBi__9wp7pMc7q0VwJ3J-yRFfmMacBbsq_An92YYHz7DPnvomafMEXdBYK3VjNSjoZfzmb_oSkBA4pgjstbT5tLseWMqWve2fTAe3ryjTGoA0V3TYs9cea8tWehYss0nAtOmtRZHqEzmpGGYxMpkj1QR-Kl9kodYvcc87UXWDyS8_KJ-7L=w371-h659-no" />
              </p>
             + **Online Mode:** 
-                    + Upon entering Online Mode, the user will see
-                    the following screen.
-                    <p align="center">
-                    	<img src="https://lh3.googleusercontent.com/-CbiQ4CXkC_mlFB_8ClJVpT1EITv9dG1N6wh9idA_-GHEmZlu-7DBve_qfv-qP0QVKAVo9X9_caHTmDzfSiTTbJhvfelhSY1ldLLW8-Fq7AMvJSxtq0PIHA_B2VAKwnPuZz_lY_eVtOl8BguJVDaSFr_pY_3BfmuhPtw_kfKhdhsKGFcgiezwDTxHp2cqmxZRavDI6-SfHdEGvS8n5clR1LDQkGDkdPT_rZ1YgLpipQ7MO9Vex_ukn0d2IU9HxrezdLaVbp-1PTI1f8Aj-Mcj-aaUTH2hvUDhZ8Tz_jWsJPC-rxX2FmXNmXjBbmVayvr799jvcSWO7iB3FEw0XAXj9ESH8zPddZtxCbBRWXjOjje4DC3ahkoERv21xpAnea3P5qcS9k262PwhGoX8tH4mdOe_ZoqDzaIvvH5Q31BduA7gQmxhtDcN3h5M4fMGwnSne1m62wVPupbTo6NArjV4jI17dty8SUiO_2-ArxSgUQUylkrDyzQuapTKPrYyEiKtXOdmzuAy0Q7Xjdn7UA2y6K6zifRaMTI3dPP1KYCaYYfFH23Gybe_q96JUJoMy50hTmVvAqXzjx2tucX2SVi5hw01ol7QMsckqxOyo4IfzcHEAAAVFxh=w371-h659-no" />
-                    </p>
-                    + If a connection to the MQTT broker can be made
-                    and the desktop client acknowledges us,
-                    we remain in Online Mode. Otherwise, we go into
-                    Offline Mode: 
-                    <p align="center">
-                        <img src="https://lh3.googleusercontent.com/9qwihb9FcHzoCw5ObE7-xb4tXFMMx7A0kExAQFqr4XX3vlQNfOY3SRqhYbgOn6mMjB_0y9PrzoEz_KmY64uh26e8Ea340BlfYgtBLvPnc8nFsFycIkXRE03xm7xEcZlFFJXLlxD4AzatjasWYNOrVVjzzJvxgd_REmW_Uhj0f3Dd923i9iBrZJWaJ8fNHqesfAUgf-giavxhmUk50_BvlUcuzQzq_j9BOS_Y11CezZZCsboBiMCGgt9dVP7lGd10YWY2eoTcvHYCZZfIerLgdjEt3TSQ50V0HosT8XSuUuHRMQU0r6NJRevmYjPJTXg6S-PPJjKXwGZ6KsGtW1N93QNlNk-nn4rN4ZUqMPv-7oIvHU7UXCNrL5fvlcrDHRUuKk4wUK0a13O3K5jd8bUwsQnRKFqc3g-E98vyLIlg8ROQzhw7yb3-tYezlFHrG4-bQmnxbzTPM1SF8d8zB9J0C1OsEA5g9imC3L4bOP3uWL0Su7kL7yDBkMyWoJznv9-Rdt3TaQO6XXfZgAwXZzTCxa5aGpdXbZzcJD0IfDEQZPJfpTMcwMiG4cEdn2JdVLkYIx10FFdNwVVUNIHJscpLGJy0vX4XyqU2eUbVCtZVM5Q4ynocffPO=w371-h659-no" />
-                    </p>
+                + Upon entering Online Mode, the user will see
+                the following screen.
+                <p align="center">
+                	<img src="https://lh3.googleusercontent.com/-CbiQ4CXkC_mlFB_8ClJVpT1EITv9dG1N6wh9idA_-GHEmZlu-7DBve_qfv-qP0QVKAVo9X9_caHTmDzfSiTTbJhvfelhSY1ldLLW8-Fq7AMvJSxtq0PIHA_B2VAKwnPuZz_lY_eVtOl8BguJVDaSFr_pY_3BfmuhPtw_kfKhdhsKGFcgiezwDTxHp2cqmxZRavDI6-SfHdEGvS8n5clR1LDQkGDkdPT_rZ1YgLpipQ7MO9Vex_ukn0d2IU9HxrezdLaVbp-1PTI1f8Aj-Mcj-aaUTH2hvUDhZ8Tz_jWsJPC-rxX2FmXNmXjBbmVayvr799jvcSWO7iB3FEw0XAXj9ESH8zPddZtxCbBRWXjOjje4DC3ahkoERv21xpAnea3P5qcS9k262PwhGoX8tH4mdOe_ZoqDzaIvvH5Q31BduA7gQmxhtDcN3h5M4fMGwnSne1m62wVPupbTo6NArjV4jI17dty8SUiO_2-ArxSgUQUylkrDyzQuapTKPrYyEiKtXOdmzuAy0Q7Xjdn7UA2y6K6zifRaMTI3dPP1KYCaYYfFH23Gybe_q96JUJoMy50hTmVvAqXzjx2tucX2SVi5hw01ol7QMsckqxOyo4IfzcHEAAAVFxh=w371-h659-no" />
+                </p>
+                + If a connection to the MQTT broker can be made
+                and the desktop client acknowledges us,
+                we remain in Online Mode. Otherwise, we go into
+                Offline Mode: 
+                <p align="center">
+                    <img src="https://lh3.googleusercontent.com/9qwihb9FcHzoCw5ObE7-xb4tXFMMx7A0kExAQFqr4XX3vlQNfOY3SRqhYbgOn6mMjB_0y9PrzoEz_KmY64uh26e8Ea340BlfYgtBLvPnc8nFsFycIkXRE03xm7xEcZlFFJXLlxD4AzatjasWYNOrVVjzzJvxgd_REmW_Uhj0f3Dd923i9iBrZJWaJ8fNHqesfAUgf-giavxhmUk50_BvlUcuzQzq_j9BOS_Y11CezZZCsboBiMCGgt9dVP7lGd10YWY2eoTcvHYCZZfIerLgdjEt3TSQ50V0HosT8XSuUuHRMQU0r6NJRevmYjPJTXg6S-PPJjKXwGZ6KsGtW1N93QNlNk-nn4rN4ZUqMPv-7oIvHU7UXCNrL5fvlcrDHRUuKk4wUK0a13O3K5jd8bUwsQnRKFqc3g-E98vyLIlg8ROQzhw7yb3-tYezlFHrG4-bQmnxbzTPM1SF8d8zB9J0C1OsEA5g9imC3L4bOP3uWL0Su7kL7yDBkMyWoJznv9-Rdt3TaQO6XXfZgAwXZzTCxa5aGpdXbZzcJD0IfDEQZPJfpTMcwMiG4cEdn2JdVLkYIx10FFdNwVVUNIHJscpLGJy0vX4XyqU2eUbVCtZVM5Q4ynocffPO=w371-h659-no" />
+                </p>
             + **Offline Mode:**
                 +Upon entering Offline Mode, the user will see
                 the following screen
