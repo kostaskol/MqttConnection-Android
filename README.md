@@ -1,15 +1,16 @@
 + Project 2016 - 2017 - Phase 2 - Android client
 	+  Index:
-		+  ##[Topics](#topics)
-		+  ##[Classes](#classes)
-		+  ##[Class Methods](#methods) 
-		+  ##[Usage Screenshots](#ss)
-		+  ##[Installation](#install) 
+		+  ## [Topics](#topics) ##
+		+  ## [Message Format](#message_format) ##
+		+  ## [Classes](#classes) ##
+		+  ## [Class Methods](#methods) ##
+		+  ## [Usage Screenshots](#ss) ##
+		+  ## [Installation](#install) ## 
 	
 
 ___________________________________________________________________
 
-+ #<a name="topics">Topics</a>
++ # <a name="topics">Topics</a> #
 	+ **log:** Not being used by the android client
 	+ **connections:** Everything that has to do with a connection.
 	+ **connections/newConnections:** When a new android client connects, they notify the desktop client by publishing to this topic
@@ -26,7 +27,7 @@ ___________________________________________________________________
 		<img src="https://lh3.googleusercontent.com/EMTDe2A2bCl9MuYJKZhCLX_tX7UdKtdf8fYdxdcuCFidDoLNWDPSGSRl4oVtERlpl-79DWBNPMcfacocgttfsDVU6azZSdBP_WkuWFD2jJ2F8gW6waPMZqLLN0g3wm8OvVqph2EdKa19BJYjsqYHRyAvq9kLpfUcwLtEaH2fTq80pnvMS5q1wzfTGcRKl0gtI-GgZoyINp9rIRpnKFovbLAk6h2PP1O4wwLJT99YfX0txHF1OFchctcVTubwk4zjAbNMjcq3cL0Ad6cVlIBt_71riQmHjeu2gCpdY2uXs68ZlwlUXNOzh9X7C2BwyIrDisLDZmPhtLoNUSl5eCoe_j5sL4CZAVWomGBtwjofZsbiA3fe1D4qyizQ1eRNseiFzk5f9Rcaoa3z4FiseBP9KKZbIyibwM7xOWOv-6B3U-l-9cg8B4FxBR1hLd7QfB9xZuQ80dU0NywqltCgg1tsRDz2-pbNJ1aL095OfSZeZwjX290c1as0ZkAkJZhaa1_eKt1ZajAqfI2CZdJIfhzdQIbiKmLn-NgJ6fQ4Mh6Ve1OXOlOXtiuRcmVbKGWFeoQXeBHu_o1KupHzSX5Xff5GLd_zgDs7cP_fIN0VhO6HFdMsm4GmYExz=w1063-h501-no" />
 	</p>
 	 
-	+ <a name="message_format">Message format by topic:</a>
+	+# <a name="message_format">Message format by topic:</a> #
 		+ **log** -> No standard format
 		+ **connections/newConnections** -> \<"Client's UUID"\>
 		+ **connections/connected/\<Client's UUID\>** -> \<"Client UUID"/"latitude"/"longitude"/"light sensor value"/"proximity sensor value">
@@ -37,7 +38,7 @@ ___________________________________________________________________
 			+   acknowledged -> <The frequency at which the android client should send data to *the* desktop client
 		+  **connections/requestAck** -> \<"Client UUID"\>
 		+  **mainClient/disconnected** -> "disconnecting"
-	+ #<a name="Classes">**_Classes_**:</a>
+	+ # <a name="Classes">**_Classes_**:</a> #
 		<p align="center">
 			<img src="https://lh3.googleusercontent.com/b-KJz-5ENFFol01knQUWUfueHWCdnVFrG1L2Lf04NZ_LDoNiPornBzh_a67oTlsxvOZzuJqT8FNfzA6QdKGz7KhDvUOW2nGfvYk_MK_LSRj8fJ_fn5pBcJ1b08_rBEI_eFcmgLNsNN7gPaw7Ekak_uate2O83RJ8Cltq-cZHU8JpYL8_06ettTzBiflPgywgPBKB9hVIe3rSCBNk_zfz18FIhIH9kcO6pVjp0JdbrP2dDePX_jGaivEisTGKPtF6NqKYXRO4eneHBcx3t1N5x57fFiXGJw8VyMRcSnHGoNekPWIBUEnNYNP-UlwdrleGvd9sQnfVWkejpKlF1P-oFGH5CY4H91lL9j3ZdUIbNIz8cw4R0gUex2M0YBnQvcX33SSumL6VX1fcSSb9ZKuXxqTLwD47FJnQu4FvNaQ45kM9z6rmrItfliPAqF2IMluVrmb_8dvrBjtdwOqPAFoI17p3JUL0nGWhrcHW8QgLngD8NQfBqLsj-NFm5p0-8tJsXqyFnYb-2TFmVKZ2ypYlHizvDoMk42qy2N4KFnuNKBuN5YCiNmc3NSU7udYQHDBM8F4ShX2Hl0gGNqqcvBpR97PZ7SE9yI6cEhYY-fkMCF-Xt1gOjjLD=w971-h546-no"
 		</p>
@@ -68,7 +69,7 @@ ___________________________________________________________________
 			|MqttConnectionCallback	|MQTT			|Provides a way to notify an activity about any messages the desktop application publishes
 			|SensorCallback			|sensors		|Provides a way for a MySensorManager object to periodically send sensor value data to the caller activity
 
-		+ <a name="methods">A brief description of every class's methods:</a>  
+		+ # <a name="methods">A brief description of every class's methods:</a> #
 		
 			|Class Name				|Method							|Description|
 			|-----------------------|-------------------------------|-----------|
@@ -112,7 +113,7 @@ ___________________________________________________________________
 			|						|unregisterListeners			|Self-explanatory
 			|						|@Over onSensorChanged			|Updates the lightVal and proxVal member variables with the new values
 	
-        + #<a name="ss">**Screenshots**</a>
+        + # <a name="ss">**Screenshots**</a> #
             + The first time we open the application 
             we are greeted by the splash screen an access location permission
             request.
@@ -127,65 +128,40 @@ ___________________________________________________________________
              <p align="center">
              	<img src="https://lh3.googleusercontent.com/JdpRQY9SAcBluRdvsLBoBTdZwiDRAxqOX2D-yrlnKwIF6eSAt7EclSlvb5AJS-fEeWdGa_3gLRHXA2YTULUbRX0GyYfkaL28QE52u2aq3VZUd_LS38e729MAhA3M0VqyLR156zSajvHJUpSWtbz9J1EItOt628ruzhB9lAylzDYtuXWaCBD0deiwqv0S5K5scV9YMSTUp6vm0aIXcpTtjhP-SfSLbT2umCong8JbTa8Zg_o_ZDfGskRFtPfwr17caKDPIQXaq2YSj13hNhcjBKHm46mpmmlvjrllkeLIEP8N8OhCiSnXTRon0TY4M3oO2cbVpPSiEMfiN6oZ5-7TWDao4WHWtc6y6IPM2G_TUSDHVOJokc6RUrr7ybRZMEuYjC5veg2n7UHEZ_6DFXWt3gJIjqQHxixvFFmQ4fYIXh88DHNE7DBxo3Efc_vzcFOBoorBi__9wp7pMc7q0VwJ3J-yRFfmMacBbsq_An92YYHz7DPnvomafMEXdBYK3VjNSjoZfzmb_oSkBA4pgjstbT5tLseWMqWve2fTAe3ryjTGoA0V3TYs9cea8tWehYss0nAtOmtRZHqEzmpGGYxMpkj1QR-Kl9kodYvcc87UXWDyS8_KJ-7L=w371-h659-no" />
              </p>
-             
-           <ul>
-            <li> **Online Mode:** 
-                <ul>
-                    <li>
-                        Upon entering Online Mode, the user will see
-                        the following screen. </li>
-                        <p align="center">
-                        	<img src="https://lh3.googleusercontent.com/-CbiQ4CXkC_mlFB_8ClJVpT1EITv9dG1N6wh9idA_-GHEmZlu-7DBve_qfv-qP0QVKAVo9X9_caHTmDzfSiTTbJhvfelhSY1ldLLW8-Fq7AMvJSxtq0PIHA_B2VAKwnPuZz_lY_eVtOl8BguJVDaSFr_pY_3BfmuhPtw_kfKhdhsKGFcgiezwDTxHp2cqmxZRavDI6-SfHdEGvS8n5clR1LDQkGDkdPT_rZ1YgLpipQ7MO9Vex_ukn0d2IU9HxrezdLaVbp-1PTI1f8Aj-Mcj-aaUTH2hvUDhZ8Tz_jWsJPC-rxX2FmXNmXjBbmVayvr799jvcSWO7iB3FEw0XAXj9ESH8zPddZtxCbBRWXjOjje4DC3ahkoERv21xpAnea3P5qcS9k262PwhGoX8tH4mdOe_ZoqDzaIvvH5Q31BduA7gQmxhtDcN3h5M4fMGwnSne1m62wVPupbTo6NArjV4jI17dty8SUiO_2-ArxSgUQUylkrDyzQuapTKPrYyEiKtXOdmzuAy0Q7Xjdn7UA2y6K6zifRaMTI3dPP1KYCaYYfFH23Gybe_q96JUJoMy50hTmVvAqXzjx2tucX2SVi5hw01ol7QMsckqxOyo4IfzcHEAAAVFxh=w371-h659-no" />
-                        </p> 
-                    <li>
-                        If a connection to the MQTT broker can be made
-                        and the desktop client acknowledges us,
-                        we remain in Online Mode. Otherwise, we go into
-                        Offline Mode: 
-                    </li>
+            + **Online Mode:** 
+                    + Upon entering Online Mode, the user will see
+                    the following screen. </li>
+                    <p align="center">
+                    	<img src="https://lh3.googleusercontent.com/-CbiQ4CXkC_mlFB_8ClJVpT1EITv9dG1N6wh9idA_-GHEmZlu-7DBve_qfv-qP0QVKAVo9X9_caHTmDzfSiTTbJhvfelhSY1ldLLW8-Fq7AMvJSxtq0PIHA_B2VAKwnPuZz_lY_eVtOl8BguJVDaSFr_pY_3BfmuhPtw_kfKhdhsKGFcgiezwDTxHp2cqmxZRavDI6-SfHdEGvS8n5clR1LDQkGDkdPT_rZ1YgLpipQ7MO9Vex_ukn0d2IU9HxrezdLaVbp-1PTI1f8Aj-Mcj-aaUTH2hvUDhZ8Tz_jWsJPC-rxX2FmXNmXjBbmVayvr799jvcSWO7iB3FEw0XAXj9ESH8zPddZtxCbBRWXjOjje4DC3ahkoERv21xpAnea3P5qcS9k262PwhGoX8tH4mdOe_ZoqDzaIvvH5Q31BduA7gQmxhtDcN3h5M4fMGwnSne1m62wVPupbTo6NArjV4jI17dty8SUiO_2-ArxSgUQUylkrDyzQuapTKPrYyEiKtXOdmzuAy0Q7Xjdn7UA2y6K6zifRaMTI3dPP1KYCaYYfFH23Gybe_q96JUJoMy50hTmVvAqXzjx2tucX2SVi5hw01ol7QMsckqxOyo4IfzcHEAAAVFxh=w371-h659-no" />
+                    </p>
+                    + If a connection to the MQTT broker can be made
+                    and the desktop client acknowledges us,
+                    we remain in Online Mode. Otherwise, we go into
+                    Offline Mode: 
                     <p align="center">
                         <img src="https://lh3.googleusercontent.com/9qwihb9FcHzoCw5ObE7-xb4tXFMMx7A0kExAQFqr4XX3vlQNfOY3SRqhYbgOn6mMjB_0y9PrzoEz_KmY64uh26e8Ea340BlfYgtBLvPnc8nFsFycIkXRE03xm7xEcZlFFJXLlxD4AzatjasWYNOrVVjzzJvxgd_REmW_Uhj0f3Dd923i9iBrZJWaJ8fNHqesfAUgf-giavxhmUk50_BvlUcuzQzq_j9BOS_Y11CezZZCsboBiMCGgt9dVP7lGd10YWY2eoTcvHYCZZfIerLgdjEt3TSQ50V0HosT8XSuUuHRMQU0r6NJRevmYjPJTXg6S-PPJjKXwGZ6KsGtW1N93QNlNk-nn4rN4ZUqMPv-7oIvHU7UXCNrL5fvlcrDHRUuKk4wUK0a13O3K5jd8bUwsQnRKFqc3g-E98vyLIlg8ROQzhw7yb3-tYezlFHrG4-bQmnxbzTPM1SF8d8zB9J0C1OsEA5g9imC3L4bOP3uWL0Su7kL7yDBkMyWoJznv9-Rdt3TaQO6XXfZgAwXZzTCxa5aGpdXbZzcJD0IfDEQZPJfpTMcwMiG4cEdn2JdVLkYIx10FFdNwVVUNIHJscpLGJy0vX4XyqU2eUbVCtZVM5Q4ynocffPO=w371-h659-no" />
                     </p>
-                </ul>
-            </li>
-            
-            <li>
-                **Offline Mode:**
-                <ul>
-                    <li>
-                       Upon entering Offline Mode, the user will see
-                       the following screen
-                    </li>
-                <p align="center">
-                	<img src="https://lh3.googleusercontent.com/dKqoQU0TSgu8SWuCEG3kvoSPE8P8lAHk9rSvRssrVdvfH2Czp_IsoNLkyXszH6W1e8dMcbPnrfW3DQJc6CBBPb-_iW9hsl-ssr9utAAvtcJHQiAT3T6MxI8bE1QRgwvHkiZBYa2YMxxweNe-6deqqKQAlMk4RP6Aa-EY4acrnc2RlXuYhyFf8QXQoFM49BNHnr1lXRejL1RfWhGOUf9yIAhsis4kPCa-YWRjpA_iauTKCtgSH5KOZ_n4u4mJncdD_KV0Uags6SGPVqkEqOYJAPpUuh4o3HfqF6l5M_AEtanyYPobHfgeefCR3kpperPx_WkTrAGY2OMXwI-xMgphdvdOaVvePrSLSt9g-9YbhV77Dh6JYIA2Zv4dn0MBw8rMv8VW5pa_uKCLYzy-L6ewfNZp6Y5O7fQO8K4HbCH04OI_x4ajlyUth50loZQsIDgK55lJrFqcTGGOn1xzTwNwf1ZBfVIvKAYaUHNk5xAitZMdjFYn06KVTc4Htaqr34z4ikWO2KIdsj3Tan6FBmh42TPXWbpK1GqQvIhvHy6DyfMtxf1kScA9EOb22lKyhlkOco374gkdvh3syNoBlN83q7fnDRV_dhZFwQSZeTyZz6-XZTXwZaMM=w371-h659-no" />
-                </p>
-                </ul>
-            </li>
-            <li>
-                If, at any point, the user chooses to change the settings or
+                + **Offline Mode:**
+                    + Upon entering Offline Mode, the user will see
+                    the following screen
+                    <p align="center">
+                    	<img src="https://lh3.googleusercontent.com/dKqoQU0TSgu8SWuCEG3kvoSPE8P8lAHk9rSvRssrVdvfH2Czp_IsoNLkyXszH6W1e8dMcbPnrfW3DQJc6CBBPb-_iW9hsl-ssr9utAAvtcJHQiAT3T6MxI8bE1QRgwvHkiZBYa2YMxxweNe-6deqqKQAlMk4RP6Aa-EY4acrnc2RlXuYhyFf8QXQoFM49BNHnr1lXRejL1RfWhGOUf9yIAhsis4kPCa-YWRjpA_iauTKCtgSH5KOZ_n4u4mJncdD_KV0Uags6SGPVqkEqOYJAPpUuh4o3HfqF6l5M_AEtanyYPobHfgeefCR3kpperPx_WkTrAGY2OMXwI-xMgphdvdOaVvePrSLSt9g-9YbhV77Dh6JYIA2Zv4dn0MBw8rMv8VW5pa_uKCLYzy-L6ewfNZp6Y5O7fQO8K4HbCH04OI_x4ajlyUth50loZQsIDgK55lJrFqcTGGOn1xzTwNwf1ZBfVIvKAYaUHNk5xAitZMdjFYn06KVTc4Htaqr34z4ikWO2KIdsj3Tan6FBmh42TPXWbpK1GqQvIhvHy6DyfMtxf1kScA9EOb22lKyhlkOco374gkdvh3syNoBlN83q7fnDRV_dhZFwQSZeTyZz6-XZTXwZaMM=w371-h659-no" />
+                    </p>
+                + If, at any point, the user chooses to change the settings or
                 close the application, 
                 they can do so by using the navigation bar
                 <p align="center">
                 	<img src="https://lh3.googleusercontent.com/jR6uWHz85nPXznv17JTBFoCrYEyHMBusR3Vfz7XaYwDIeA2HKKdkbTv0fNHaIo_7RlxB3YtBo16jGBBZEjMK4s1t8NLzEWATVqLwyfCbSFdzUAVM_SQdbtvVQbRfFe3Ri3mpArOILuHZh7vpqRSEJSvbrLCtRNuxP3yXibQXNcZwxBx2AYeVKh04v0DS5F_wFWtgWR20KYuFgoEGZx5MQB6k848QvrF5ZZYcU3BClzX2vDpRthgo8ZW5yoOfuPzlHfD0C_W7sFuQ3OQ8gCrx8TDPYrxGFctemcpZXYS-nbp93Rb1zUozTHNPi-PYaKIXKrfUYmexpRG0WiJhP7Ry1NMFWoF4YglfC5sGiBjHEJBOtRxtaAMFNzE7fXKcLFpbhC9rY__q_Zatd0p2LbPHzO3dRGQYEGkAZRMm-EfZxZiJSlTVruVs4-JmFWUadOYxTfVeP82y8xz0S5fPDjFkm7Pp851PRYZSsTjw7qDb9YJqDLeXVrEaclnnnmaLF-ti1OAg-TjAXWt1NFgBNuOFaEDHfquRUTZQbgkNQAqF7gdH3XqiH67_6Zk6-Ui4PkuGlKyGCWmJopOuRwG68Znl6DYhh_kJ43-v1poEP-guVhYhUsMSfcX1=w371-h659-no" />
                 </p>
-            </li>
-                
-            </li>
-            <li>
-                When entering the settings activity, the user will
+                + When entering the settings activity, the user will
                 see the following screen
                 <p align="center">
                 	<img src="https://lh3.googleusercontent.com/PXoBAUha4cQKVHJ-mHCzr_MZbQMCYvGkFyS59WtD0myDaS_uHTEG5WxOg95KCiUTjVnnDBBpAkChRlZ3k2AO49Z9Q-lfwsLHULTlAWbFYHR4XLbVi_QQYTXWJgg-u0LNdmUqYsGycjBedjnPmwNVuVejR5_JtUxiHey_nu1Cs_n0WMuu-NH54xz-eFIdlGx-YiYqPOefet1M5Das-359zx_FJuADh3Gy0HtF428Q-KLmM4C8tyh0pfhXSX_LPZpOM-Sj7-nLqC2jMkmwj5ffzCD4PRk3dvGZYiI6o7krQyYK4mGylFqGl25o8bSUzcT4kZw0JzgqIr7doYb5k0jKzeoDwbnA24L2AaCq8CJlAOeQJNpO6TGyGIGW5JBVoe3z6AgKa5ZtxOExJrIs-m2ocXGfPjKZ4VFDJx6Q1LPrYFD5leeQYZShBq-B7D0_gBnID37ita4xIP4OOD45Fm-4zJWC9UOaihrsNYK_D-OG0NphDDCx5qFJTXpUQJALcVMhpZK_XOa6Rt8oD0AHyg17aSSlTF0bAFPSx1eLUxYjTv4vMydwVtC6YhiVvquWc97AmqLbtTleQEmN9MCGDr9DdoLzpLVm4GSb-5T0B47gpS_kMvj0H9mU=w371-h659-no" />
                 </p>
-            </li>
-            <li>
-                Note: Offline mode's settings have no effect when the application 
+                + Note: Offline mode's settings have no effect when the application 
                 is in Online Mode
-            </li>
-            </li>
-           </ul>
         
-        + # <a name="install">Installation</a>
+        + # <a name="install">Installation</a> #
         1. Copy the following file:  
         "build/outputs/apk/app-debug.apk" to your android device.
         2. In your android device:  
