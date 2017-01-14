@@ -131,7 +131,7 @@ ________________________________________________________________________________
              </p>
             + **Online Mode:** 
                     + Upon entering Online Mode, the user will see
-                    the following screen. </li>
+                    the following screen.
                     <p align="center">
                     	<img src="https://lh3.googleusercontent.com/-CbiQ4CXkC_mlFB_8ClJVpT1EITv9dG1N6wh9idA_-GHEmZlu-7DBve_qfv-qP0QVKAVo9X9_caHTmDzfSiTTbJhvfelhSY1ldLLW8-Fq7AMvJSxtq0PIHA_B2VAKwnPuZz_lY_eVtOl8BguJVDaSFr_pY_3BfmuhPtw_kfKhdhsKGFcgiezwDTxHp2cqmxZRavDI6-SfHdEGvS8n5clR1LDQkGDkdPT_rZ1YgLpipQ7MO9Vex_ukn0d2IU9HxrezdLaVbp-1PTI1f8Aj-Mcj-aaUTH2hvUDhZ8Tz_jWsJPC-rxX2FmXNmXjBbmVayvr799jvcSWO7iB3FEw0XAXj9ESH8zPddZtxCbBRWXjOjje4DC3ahkoERv21xpAnea3P5qcS9k262PwhGoX8tH4mdOe_ZoqDzaIvvH5Q31BduA7gQmxhtDcN3h5M4fMGwnSne1m62wVPupbTo6NArjV4jI17dty8SUiO_2-ArxSgUQUylkrDyzQuapTKPrYyEiKtXOdmzuAy0Q7Xjdn7UA2y6K6zifRaMTI3dPP1KYCaYYfFH23Gybe_q96JUJoMy50hTmVvAqXzjx2tucX2SVi5hw01ol7QMsckqxOyo4IfzcHEAAAVFxh=w371-h659-no" />
                     </p>
