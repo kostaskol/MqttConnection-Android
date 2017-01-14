@@ -1,16 +1,16 @@
-+ Project 2016 - 2017 - Phase 2 - Android client
-	+  Index:
-		+   [## Topics ##](#topics) ##
-		+  ## [Message Format](#message_format) ##
-		+  ## [Classes](#classes) ##
-		+  ## [Class Methods](#methods) ##
-		+  ## [Usage Screenshots](#ss) ##
-		+  ## [Installation](#install) ## 
++ # Project 2016 - 2017 - Phase 2 - Android client #
+	+  # Index: #
+		+  ### [Topics](#topics) ###
+		+  ### [Message Format](#message_format) ###
+		+  ### [Classes](#classes) ###
+		+  ### [Class Methods](#methods) ###
+		+  ### [Usage Screenshots](#ss) ###
+		+  ### [Installation](#install) ###
 	
 
 ___________________________________________________________________
 
-+ # <a name="topics">Topics</a> #
++ ## <a name="topics">Topics</a> ##
 	+ **log:** Not being used by the android client
 	+ **connections:** Everything that has to do with a connection.
 	+ **connections/newConnections:** When a new android client connects, they notify the desktop client by publishing to this topic
@@ -27,7 +27,7 @@ ___________________________________________________________________
 		<img src="https://lh3.googleusercontent.com/EMTDe2A2bCl9MuYJKZhCLX_tX7UdKtdf8fYdxdcuCFidDoLNWDPSGSRl4oVtERlpl-79DWBNPMcfacocgttfsDVU6azZSdBP_WkuWFD2jJ2F8gW6waPMZqLLN0g3wm8OvVqph2EdKa19BJYjsqYHRyAvq9kLpfUcwLtEaH2fTq80pnvMS5q1wzfTGcRKl0gtI-GgZoyINp9rIRpnKFovbLAk6h2PP1O4wwLJT99YfX0txHF1OFchctcVTubwk4zjAbNMjcq3cL0Ad6cVlIBt_71riQmHjeu2gCpdY2uXs68ZlwlUXNOzh9X7C2BwyIrDisLDZmPhtLoNUSl5eCoe_j5sL4CZAVWomGBtwjofZsbiA3fe1D4qyizQ1eRNseiFzk5f9Rcaoa3z4FiseBP9KKZbIyibwM7xOWOv-6B3U-l-9cg8B4FxBR1hLd7QfB9xZuQ80dU0NywqltCgg1tsRDz2-pbNJ1aL095OfSZeZwjX290c1as0ZkAkJZhaa1_eKt1ZajAqfI2CZdJIfhzdQIbiKmLn-NgJ6fQ4Mh6Ve1OXOlOXtiuRcmVbKGWFeoQXeBHu_o1KupHzSX5Xff5GLd_zgDs7cP_fIN0VhO6HFdMsm4GmYExz=w1063-h501-no" />
 	</p>
 	 
-	+# <a name="message_format">Message format by topic:</a> #
+	+## <a name="message_format">Message format by topic:</a> ##
 		+ **log** -> No standard format
 		+ **connections/newConnections** -> \<"Client's UUID"\>
 		+ **connections/connected/\<Client's UUID\>** -> \<"Client UUID"/"latitude"/"longitude"/"light sensor value"/"proximity sensor value">
@@ -38,7 +38,7 @@ ___________________________________________________________________
 			+   acknowledged -> <The frequency at which the android client should send data to *the* desktop client
 		+  **connections/requestAck** -> \<"Client UUID"\>
 		+  **mainClient/disconnected** -> "disconnecting"
-	+ # <a name="Classes">**_Classes_**:</a> #
+	+ ## <a name="Classes">**_Classes_**:</a> ##
 		<p align="center">
 			<img src="https://lh3.googleusercontent.com/b-KJz-5ENFFol01knQUWUfueHWCdnVFrG1L2Lf04NZ_LDoNiPornBzh_a67oTlsxvOZzuJqT8FNfzA6QdKGz7KhDvUOW2nGfvYk_MK_LSRj8fJ_fn5pBcJ1b08_rBEI_eFcmgLNsNN7gPaw7Ekak_uate2O83RJ8Cltq-cZHU8JpYL8_06ettTzBiflPgywgPBKB9hVIe3rSCBNk_zfz18FIhIH9kcO6pVjp0JdbrP2dDePX_jGaivEisTGKPtF6NqKYXRO4eneHBcx3t1N5x57fFiXGJw8VyMRcSnHGoNekPWIBUEnNYNP-UlwdrleGvd9sQnfVWkejpKlF1P-oFGH5CY4H91lL9j3ZdUIbNIz8cw4R0gUex2M0YBnQvcX33SSumL6VX1fcSSb9ZKuXxqTLwD47FJnQu4FvNaQ45kM9z6rmrItfliPAqF2IMluVrmb_8dvrBjtdwOqPAFoI17p3JUL0nGWhrcHW8QgLngD8NQfBqLsj-NFm5p0-8tJsXqyFnYb-2TFmVKZ2ypYlHizvDoMk42qy2N4KFnuNKBuN5YCiNmc3NSU7udYQHDBM8F4ShX2Hl0gGNqqcvBpR97PZ7SE9yI6cEhYY-fkMCF-Xt1gOjjLD=w971-h546-no"
 		</p>
@@ -69,7 +69,7 @@ ___________________________________________________________________
 			|MqttConnectionCallback	|MQTT			|Provides a way to notify an activity about any messages the desktop application publishes
 			|SensorCallback			|sensors		|Provides a way for a MySensorManager object to periodically send sensor value data to the caller activity
 
-		+ # <a name="methods">A brief description of every class's methods:</a> #
+		+ ## <a name="methods">A brief description of every class's methods:</a> ##
 		
 			|Class Name				|Method							|Description|
 			|-----------------------|-------------------------------|-----------|
@@ -113,7 +113,7 @@ ___________________________________________________________________
 			|						|unregisterListeners			|Self-explanatory
 			|						|@Over onSensorChanged			|Updates the lightVal and proxVal member variables with the new values
 	
-        + # <a name="ss">**Screenshots**</a> #
+        + ## <a name="ss">**Screenshots**</a> ##
             + The first time we open the application 
             we are greeted by the splash screen an access location permission
             request.
@@ -161,7 +161,7 @@ ___________________________________________________________________
                 + Note: Offline mode's settings have no effect when the application 
                 is in Online Mode
         
-        + # <a name="install">Installation</a> #
+        + ## <a name="install">Installation</a> ##
         1. Copy the following file:  
         "build/outputs/apk/app-debug.apk" to your android device.
         2. In your android device:  
