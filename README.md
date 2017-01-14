@@ -65,7 +65,8 @@ ___________________________________________________________________
 			|MqttConnectionCallback	|MQTT			|Provides a way to notify an activity about any messages the desktop application publishes
 			|SensorCallback			|sensors		|Provides a way for a MySensorManager object to periodically send sensor value data to the caller activity
 
-		+ <a name="methods">A brief description of every class's methods:</a>
+		+ <a name="methods">A brief description of every class's methods:</a>  
+		
 			|Class Name				|Method							|Description|
 			|-----------------------|-------------------------------|-----------|
 			|OfflineMode			|@Over onCreate					|Initialises the activity and checks (and notifies the user) whether the application was forced into offline mode (i.e. There is no internet connection)
