@@ -1,6 +1,6 @@
 + Project 2016 - 2017 - Phase 2 - Android client
 	+  Index:
-		+  ## [Topics](#topics) ##
+		+   [## Topics ##](#topics) ##
 		+  ## [Message Format](#message_format) ##
 		+  ## [Classes](#classes) ##
 		+  ## [Class Methods](#methods) ##
