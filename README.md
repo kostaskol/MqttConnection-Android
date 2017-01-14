@@ -48,8 +48,7 @@ ___________________________________________________________________
 			|OfflineMode	 			|Activities	|Activity		|Provides the full application usage when the device **_is not_** connected to the MQTT broker
 			|OnlineMode		 			|Activities |Activity		|Provides the full application usage when the device **_is_** connected to the MQTT broker
 			|SettingsActivity			|Activities |Activity		|Allows the user to change the application's settings
-			|SplashScreen				|Activities |Activity		|Makes the necessary checks about the availability of an internet connection or a GPS signal and starts an
-			activity accordingly
+			|SplashScreen				|Activities |Activity		|Makes the necessary checks about the availability of an internet connection or a GPS signal and starts an activity accordingly
 			|GpsManager					|GPS		|Manager		|Utilises Google Play Services to automate the acquisition of the user's current location.
 			|OnlineAvailabilityChecker	|GPS		|Utility		|Provides functions that check the availability of internet/GPS and the user permissions
 			|AlertBuilder				|HelpClasses|Utility		|Easy construction of alert dialogs
