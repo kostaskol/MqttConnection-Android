@@ -476,6 +476,7 @@ public class OfflineMode extends AppCompatActivity implements
                         internetAlert.showDialog();
                     }
                 } else {
+                    mqttManager.disconnect();
                     goOnline();
                 }
             } catch (InterruptedException ie) {
@@ -483,6 +484,8 @@ public class OfflineMode extends AppCompatActivity implements
             }
 
 
+        } else {
+            mqttManager.disconnect();
         }
     }
 
