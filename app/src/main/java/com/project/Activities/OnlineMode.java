@@ -161,15 +161,10 @@ public class OnlineMode extends AppCompatActivity
     @Override
     public void soundWarning() {
         if (warningPlayer != null) {
-            warningPlayer.start(true);
-        }
-        warningToast = Toast.makeText(this, "Warning! Warning! Warning!", Toast.LENGTH_SHORT);
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getApplicationContext(), "Warning!", Toast.LENGTH_LONG).show();
+            if (!warningPlayer.isPlaying()) {
+                warningPlayer.start(true);
             }
-        });
+        }
     }
 
     @Override
@@ -178,15 +173,12 @@ public class OnlineMode extends AppCompatActivity
             if (warningPlayer != null) {
                 warningPlayer.stopImmediately();
             }
-            dangerPlayer.start(true);
-        }
-        dangerToast = Toast.makeText(this, "Danger! Danger! Danger!", Toast.LENGTH_SHORT);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                dangerToast.show();
+            if (dangerPlayer != null) {
+                if (!dangerPlayer.isPlaying() {
+                    dangerPlayer.start(true);
+                }
             }
-        });
+        }
     }
 
     @Override
