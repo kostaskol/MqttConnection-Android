@@ -88,7 +88,7 @@
 </tr><tr>
 <td>connections/connected/<Client's UUID></td>
 <td>-None-</td>
-<td>\<"Client UUID"/"latitude"/"longitude"/"light sensor value"/"proximity sensor value"></td>
+<td><"Client UUID"/"latitude"/"longitude"/"light sensor value"/"proximity sensor value"></td>
 </tr><tr>
 <td></td>
 <td>warning</td>
