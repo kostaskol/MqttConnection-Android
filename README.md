@@ -34,7 +34,7 @@
 	<td>Already connected android clients public to this + their UUID topic</td>
 </tr>
 <tr>
-	<td>connections/connected/<Client's UUID\><td>
+	<td>connections/connected/<Client's UUID\></td>
 	<td>-None-</td>
 	<td>Already connected android clients public to this topic</td>
 </tr>
@@ -70,7 +70,7 @@
 </tr>
 </table>
 
-+ <h2><a name="message_format">__Message format__</a> </h2>
++ <h2><a name="message_format">Message format</a> </h2>
 
 <table>
 <tr>
@@ -122,7 +122,7 @@
     Go to Settings -> Security -> Allow installation of apps from unknown sources
     3. Install the application using the app-debug.apk file
 
-+ <h2><a name="algorithm">**Algorithm**</a></h2>
++ <h2><a name="algorithm">Algorithm</a></h2>
     1. A threshold and a current lighting value are supplied to the algorithm.
     2. For the first set amount of times we receive a lighting value, we add it to a sum and do nothing else.
     3. When we have enough values, we calculate the user's current environment average
