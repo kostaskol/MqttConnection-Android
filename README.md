@@ -1,6 +1,6 @@
 <h1> Software development for network systems - Android client </h1>
 <h2> Index: </h2>
-+ [Topics](#topics)
++ topics
 [Message Format](#message_format)
 [Classes](#classes)
 [Class Methods](#methods)
