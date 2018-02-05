@@ -1,9 +1,9 @@
-<h1> Project 2016 - 2017 - Phase 2 - Android client </h1>
-	  <h2> Index: </h2>
-		[Topics](#topics)
+<h1> Software development for network systems - Android client </h1>
+<h2> Index: </h2>
++ [Topics](#topics)
 + [Message Format](#message_format)
 + [Classes](#classes)
-   [Class Methods](#methods)
+   + [Class Methods](#methods)
 +  [Installation](#install)
 +  [Algorithm](#algorithm)
 
