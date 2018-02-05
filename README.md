@@ -1,11 +1,11 @@
 <h1> Software development for network systems - Android client </h1>
-<h2> Index: </h2>
+Index:
 [Topics](#topics)
-+ [Message Format](#message_format)
-+ [Classes](#classes)
-   + [Class Methods](#methods)
-+  [Installation](#install)
-+  [Algorithm](#algorithm)
+[Message Format](#message_format)
+[Classes](#classes)
+[Class Methods](#methods)
+[Installation](#install)
+[Algorithm](#algorithm)
 
 + <h2> <a name="topics">Topics</a> </h2>
 <table>
