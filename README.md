@@ -80,13 +80,13 @@
 </tr><tr>
 <td>log</td>
 <td>-None-</td>
-<td>\<"Log message type" - "message"\></td>
+<td><"Log message type" - "message"></td>
 </tr><tr>
 <td>connections/newConnections</td>
 <td>-None-</td>
-<td>\<"Client's UUID"\></td>
+<td><"Client's UUID"></td>
 </tr><tr>
-<td>connections/connected/\<Client's UUID></td>
+<td>connections/connected/<Client's UUID></td>
 <td>-None-</td>
 <td>\<"Client UUID"/"latitude"/"longitude"/"light sensor value"/"proximity sensor value"></td>
 </tr><tr>
@@ -104,11 +104,11 @@
 </tr><tr>
 <td></td>
 <td>acknowledged</td>
-<td>\<The frequency at which the android client should contact the desktop client\></td>
+<td><The frequency at which the android client should contact the desktop client></td>
 </tr><tr>
 <td>connections/requestAck</td>
 <td>-None-</td>
-<td>\<"Client's UUID"\></td>
+<td><"Client's UUID"></td>
 </tr><tr>
 <td>mainClient/disconnected</td>
 <td>-None-</td>
@@ -116,10 +116,8 @@
 </tr></table>
 
 + <h2> <a name="install">Installation</a> </h2>
-    1. Copy the following file:  
-    "build/outputs/apk/app-debug.apk" to your android device.
-    2. In your android device:  
-    Go to Settings -> Security -> Allow installation of apps from unknown sources
+    1. Copy the following file: "build/outputs/apk/app-debug.apk" to your android device.
+    2. In your android device: Go to Settings -> Security -> Allow installation of apps from unknown sources
     3. Install the application using the app-debug.apk file
 
 + <h2><a name="algorithm">Algorithm</a></h2>
